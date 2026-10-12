@@ -1,0 +1,43 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.SitePage>
+@{
+    ViewData["Title"] = "Gestion des pages du site";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Administration · Contenu du site</p>
+        <h1>Gestion des pages du site</h1>
+        <p>
+            <a class="button" asp-action="NewSitePage">+ Nouvelle page</a>
+            <a asp-action="Index">Retour au tableau de bord</a>
+        </p>
+        @if (TempData["AdminSuccess"] is string success)
+        {
+            <p class="success-message">@success</p>
+        }
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr><th>Titre</th><th>Adresse (slug)</th><th>Dernière modification</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr><td colspan="4">Aucune page disponible.</td></tr>
+                }
+                else
+                {
+                    @foreach (var sitePage in Model)
+                    {
+                        <tr>
+                            <td>@sitePage.Title</td>
+                            <td><a asp-controller="Pages" asp-action="Details" asp-route-slug="@sitePage.Slug" target="_blank" rel="noopener">/@sitePage.Slug</a></td>
+                            <td>@sitePage.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                            <td><a asp-action="EditSitePage" asp-route-slug="@sitePage.Slug">Modifier</a></td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

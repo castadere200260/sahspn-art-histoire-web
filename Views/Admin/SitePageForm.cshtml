@@ -1,0 +1,38 @@
+@model Sahspn.ArtHistoire.Models.SitePage
+@{
+    // Derive the operation from the stable original slug, not from dynamic ViewBag/ViewData.
+    var originalSlug = ViewData.ContainsKey("OriginalSlug")
+        ? Convert.ToString(ViewData["OriginalSlug"]) ?? string.Empty
+        : Model.Slug ?? string.Empty;
+    var isNew = string.IsNullOrWhiteSpace(originalSlug);
+    ViewData["Title"] = isNew ? "Nouvelle page du site" : "Modifier une page du site";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Administration · Contenu du site</p>
+        <h1>@(isNew ? "Créer une page" : "Modifier la page")</h1>
+        <form asp-action="SaveSitePage" method="post" class="admin-login-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="isNew" value="@isNew" />
+            <input type="hidden" name="originalSlug" value="@originalSlug" />
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+            <label asp-for="Title">Titre de la page</label>
+            <input asp-for="Title" maxlength="180" required />
+            <span asp-validation-for="Title"></span>
+            <label asp-for="Slug">Slug (adresse URL)</label>
+            <input asp-for="Slug" maxlength="100" placeholder="exemple : histoire-locale" required pattern="[a-z0-9]+(-[a-z0-9]+)*" />
+            <small>Minuscules, chiffres et tirets uniquement. Exemple : histoire-locale.</small>
+            <span asp-validation-for="Slug"></span>
+            <label asp-for="Content">Contenu de la page</label>
+            <textarea asp-for="Content" rows="18" required></textarea>
+            <span asp-validation-for="Content"></span>
+            @if (!isNew)
+            {
+                <p>Dernière modification : @Model.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+            }
+            <button class="button" type="submit">Enregistrer la page</button>
+            <a asp-action="SitePages">Annuler</a>
+        </form>
+    </div>
+</section>
