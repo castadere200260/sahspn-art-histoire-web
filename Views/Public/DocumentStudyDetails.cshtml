@@ -1,0 +1,30 @@
+@model Sahspn.ArtHistoire.Models.DocumentStudy
+@{
+    ViewData["Title"] = Model.Title;
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">@(Model.Type == Sahspn.ArtHistoire.Models.DocumentStudyType.Document ? "Document" : "Étude") · Archives & recherches</p>
+        <h1>@Model.Title</h1>
+        <p class="admin-muted">@(Model.PublishedAt?.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.GetCultureInfo("fr-FR")) ?? "")</p>
+        @if (!string.IsNullOrWhiteSpace(Model.CoverImage))
+        {
+            <p><img src="@Model.CoverImage" alt="@Model.Title" style="max-width:100%;max-height:420px;object-fit:contain" /></p>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.Summary))
+        {
+            <p class="admin-intro">@Model.Summary</p>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.Content))
+        {
+            <div class="prose">@Model.Content</div>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.DocumentUrl))
+        {
+            <p><a class="button" href="@Model.DocumentUrl" target="_blank" rel="noopener">Ouvrir le document PDF ↗</a></p>
+        }
+        <p>
+            <a class="button button-dark" asp-action="DocumentsStudies">Retour aux documents et études</a>
+        </p>
+    </div>
+</section>

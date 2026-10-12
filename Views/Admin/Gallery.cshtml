@@ -1,0 +1,39 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.GalleryImage>
+@{
+    ViewData["Title"] = "Gestion de la galerie";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Administration · Images</p>
+        <div class="admin-page-heading">
+            <div><h1>Gestion de la galerie</h1><p>Ajoutez les photos de l’association, choisissez leur ordre et gérez leur publication sur le site public.</p></div>
+            <a class="button button-dark" asp-action="NewGalleryImage">+ Ajouter une image</a>
+        </div>
+        @if (TempData["AdminSuccess"] is string success) { <p class="admin-success" role="status">@success</p> }
+        @if (TempData["AdminError"] is string error) { <p class="validation-summary" role="alert">@error</p> }
+        <p><a asp-controller="PublicDirectory" asp-action="Gallery" target="_blank" rel="noopener">Voir la galerie publique ↗</a></p>
+        @if (Model.Count == 0)
+        {
+            <div class="admin-empty-state">Aucune image. Cliquez sur « Ajouter une image » pour commencer.</div>
+        }
+        <div class="gallery-grid gallery-admin-grid">
+            @foreach (var item in Model)
+            {
+                <article class="gallery-card">
+                    <img src="@item.ImageUrl" alt="@(item.AltText ?? item.Title)" loading="lazy" />
+                    <div class="gallery-card-body">
+                        <h2>@item.Title</h2>
+                        @if (!string.IsNullOrWhiteSpace(item.Description)) { <p>@item.Description</p> }
+                        <p><span class="admin-status @(item.IsPublished ? "is-active" : "is-inactive")">@(item.IsPublished ? "Publié" : "Masqué")</span> <span class="admin-muted">Ordre : @item.DisplayOrder</span></p>
+                        <div class="gallery-card-actions">
+                            <a asp-action="EditGalleryImage" asp-route-id="@item.Id">Modifier</a>
+                            <form asp-action="DeleteGalleryImage" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Supprimer cette image de la galerie ?')">
+                                @Html.AntiForgeryToken()<button type="submit" class="text-danger">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+</section>

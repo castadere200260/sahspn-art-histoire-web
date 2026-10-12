@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Connexion administration";
+}
+<section class="section">
+    <div class="container" style="max-width:520px">
+        <h3>Connectez-vous avec votre compte administrateur</h3>
+        <form asp-controller="Account" asp-action="Login" method="post" class="admin-login-form">
+            @Html.AntiForgeryToken()<input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+            <label for="username">Identifiant</label>
+            <input id="username" name="username" autocomplete="username" required maxlength="100" />
+            <label for="password">Mot de passe</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
+            <button class="button button-primary" type="submit">Se connecter</button>
+        </form>
+        <p class="eyebrow">Espace réservé</p>
+    </div>
+</section>

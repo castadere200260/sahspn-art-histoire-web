@@ -1,0 +1,45 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.Appointment>
+@{
+    ViewData["Title"] = "Actualités";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Agenda de l’association</p>
+        <div class="admin-page-heading">
+            <div>
+                <h1>Actualités</h1>
+                <p>Retrouvez les réunions, conférences et événements proposés par l’association.</p>
+            </div>
+        </div>
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead><tr><th>Date et heure</th><th>Actualités</th><th>Description</th><th>Lieu</th></tr></thead>
+                <tbody>
+                    @if (Model.Count == 0)
+                    {
+                        <tr><td colspan="4" class="admin-empty-state">Aucune actualité à afficher.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var appointment in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@appointment.StartsAt.ToString("dd/MM/yyyy")</strong>
+                                    <div class="admin-muted">@appointment.StartsAt.ToString("HH:mm")</div>
+                                    @if (appointment.EndsAt.HasValue)
+                                    {
+                                        <div class="admin-muted">Fin : @appointment.EndsAt.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                                    }
+                                </td>
+                                <td><strong>@appointment.Title</strong></td>
+                                <td>@(string.IsNullOrWhiteSpace(appointment.Description) ? "—" : appointment.Description)</td>
+                                <td>@(string.IsNullOrWhiteSpace(appointment.Location) ? "—" : appointment.Location)</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

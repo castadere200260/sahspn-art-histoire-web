@@ -1,0 +1,51 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.ShopItem>
+@{
+    ViewData["Title"] = "Boutique · Bulletins et documents";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Publications · Boutique</p>
+        <div class="admin-page-heading">
+            <div>
+                <h1>Boutique</h1><p>Découvrez les bulletins et documents proposés par la Société d’Art et d’Histoire de Sarlat et du Périgord Noir.</p>
+            </div>
+        </div>
+
+        @if (Model.Count == 0)
+        {
+            <div class="admin-empty-state">Aucun article n’est actuellement proposé dans la boutique.</div>
+        }
+        <div class="bulletin-grid catalog-grid">
+            @foreach (var item in Model)
+            {
+                <article class="bulletin-card">
+
+                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                    {
+                        <div class="cover-wrap">
+
+                            <img src="@item.ImageUrl" alt="@item.Title" loading="lazy" />
+                        </div>
+                    }
+                    @*                         else
+                        {
+
+                            <div class="cover-placeholder"><span>SAHSPN</span><strong>@(item.Type == Sahspn.ArtHistoire.Models.ShopItemType.Bulletin ? "BULLETIN" : "DOCUMENT")</strong><small>Art & Histoire en Périgord Noir</small></div>
+                        } *@
+
+
+                    <div class="bulletin-meta">@(item.Type == Sahspn.ArtHistoire.Models.ShopItemType.Bulletin ? "BULLETIN" : "DOCUMENT")</div><h3>@item.Title</h3>
+                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                    {
+                        <p>@item.Description</p>
+                    }
+                    <p><strong>@item.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</strong></p>
+                    @if (!string.IsNullOrWhiteSpace(item.DocumentUrl))
+                    {
+                        <a class="card-link" href="@item.DocumentUrl" target="_blank" rel="noopener">Consulter le document <span>↗</span></a>
+                    }
+                </article>
+            }
+        </div>
+    </div>
+</section>

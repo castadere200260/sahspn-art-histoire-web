@@ -1,0 +1,22 @@
+@model SitePage
+@{
+    ViewData["Title"] = Model.Title;
+}
+<section class="page-hero">
+    <div class="container">
+        <h1>@Model.Title</h1>
+    </div>
+</section>
+<section class="page-content">
+    <div class="container content-panel">
+        <div class="content-kicker">SOCIÉTÉ D’ART ET D’HISTOIRE</div>
+        <div class="legacy-content">@Model.Content</div>
+        @if (Model.Slug == "association")
+        {
+            <div class="content-callout">
+                <h2>Envie de participer ?</h2><p>Rejoignez les passionnés qui font vivre la connaissance du Périgord Noir.</p>
+                <a class="button button-dark" asp-controller="Pages" asp-action="Contact">Nous contacter <span>↗</span></a>
+            </div>
+        }
+    </div>
+</section>

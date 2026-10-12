@@ -1,0 +1,10 @@
+mongo db atlas sahspn
+
+username
+jeanmichelcastadere_db_user
+
+pw
+iGsHav238jvcjyKw
+
+CONN 
+mongodb+srv://jeanmichelcastadere_db_user:iGsHav238jvcjyKw@cluster-sahspn.lr3dbxd.mongodb.net/

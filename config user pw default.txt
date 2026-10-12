@@ -1,0 +1,3 @@
+$env:AdminBootstrap__Username = "admin"
+$env:AdminBootstrap__Password = "JMc200260#"
+dotnet run

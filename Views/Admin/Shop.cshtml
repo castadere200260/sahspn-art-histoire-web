@@ -1,0 +1,36 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.ShopItem>
+@{
+    ViewData["Title"] = "Gestion de la boutique";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Administration · Catalogue</p><h1>Gestion de la boutique</h1>
+        <p>Gérez les bulletins et documents affichés au public. Cette boutique est un catalogue : aucune commande ni aucun paiement n’est proposé.</p>
+        @if (TempData["AdminSuccess"] is string success)
+        {
+            <p class="admin-success" role="status">@success</p>
+        }
+        @if (TempData["AdminError"] is string error)
+        {
+            <p class="validation-summary" role="alert">@error</p>
+        }
+        <p>
+            <a class="button" asp-action="NewShopItem">+ Ajouter un article</a> <a asp-controller="PublicDirectory" asp-action="Shop" target="_blank" rel="noopener">Voir la boutique publique ↗</a>
+        </p>
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead><tr><th>Article</th><th>Type</th><th>Prix</th><th>Visibilité</th><th>Actions</th></tr></thead>
+                <tbody>
+                    @if (Model.Count == 0)
+                    {
+                        <tr><td colspan="5" class="admin-empty-state">Aucun article dans le catalogue.</td></tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr><td><strong>@item.Title</strong><div class="admin-muted">@item.Description</div></td><td>@(item.Type == Sahspn.ArtHistoire.Models.ShopItemType.Bulletin ? "Bulletin" : "Document")</td><td>@item.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</td><td><span class="admin-status @(item.IsPublished ? "is-active" : "is-inactive")">@(item.IsPublished ? "Publié" : "Masqué")</span></td><td><a asp-action="EditShopItem" asp-route-id="@item.Id">Modifier</a><form asp-action="DeleteShopItem" asp-route-id="@item.Id" method="post" class="inline-form" onsubmit="return confirm('Supprimer cet article du catalogue ?')">@Html.AntiForgeryToken()<button type="submit" class="text-danger">Supprimer</button></form></td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

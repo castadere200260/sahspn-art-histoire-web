@@ -1,0 +1,51 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.Appointment>
+@{
+    ViewData["Title"] = "Actualités";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Administration · Agenda</p>
+        @if (TempData["AdminSuccess"] is string success)
+        {
+            <p class="alert alert-success" role="status">@success</p>
+        }
+        @if (TempData["AdminError"] is string error)
+        {
+            <p class="alert alert-danger" role="alert">@error</p>
+        }
+        <div class="admin-page-heading">
+            <div>
+                <h1>Actualités</h1>
+                <p>Consultez les réunions, conférences et événements planifiés par l’association.</p>
+            </div>
+            <a class="button button-dark" asp-action="NewAppointment">+ Ajouter Actualite</a>
+        </div>
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead><tr><th>Date et heure</th><th>Actualités</th><th>Lieu</th><th>Actions</th></tr></thead>
+                <tbody>
+                    @if (Model.Count == 0)
+                    {
+                        <tr><td colspan="4" class="admin-empty-state">Aucune Actualité enregistrée. Utilisez « Ajouter Actualité » pour planifier un événement.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var appointment in Model.OrderBy(x => x.StartsAt))
+                        {
+                            <tr>
+                                <td><strong>@appointment.StartsAt.ToString("dd/MM/yyyy")</strong><br /><span class="admin-muted">@appointment.StartsAt.ToString("HH:mm")</span></td>
+                                <td>
+                                    <strong>@appointment.Title</strong>@if (appointment.EndsAt.HasValue) {
+                                    <div class="admin-muted">Fin : @appointment.EndsAt.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                                }
+                            </td>
+                            <td>@(string.IsNullOrWhiteSpace(appointment.Location) ? "—" : appointment.Location)</td>
+                            <td class="admin-actions"><a asp-action="EditAppointment" asp-route-id="@appointment.Id">Modifier</a><form asp-action="DeleteAppointment" asp-route-id="@appointment.Id" method="post" class="inline-form" onsubmit="return confirm('Supprimer ce rendez-vous ?')">@Html.AntiForgeryToken()<button type="submit" class="text-danger">Supprimer</button></form></td>
+                        </tr>
+                    }
+                                        }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

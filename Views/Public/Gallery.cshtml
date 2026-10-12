@@ -1,0 +1,25 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.GalleryImage>
+@{
+    ViewData["Title"] = "Galerie photos";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">SAHSPN · Photographies</p>
+        <div class="admin-page-heading"><div><h1>Galerie</h1><p>Quelques images de la vie de l’association, de ses activités et du patrimoine du Périgord Noir.</p></div></div>
+        @if (Model.Count == 0)
+        {
+            <div class="admin-empty-state">La galerie sera bientôt enrichie de nouvelles photographies.</div>
+        }
+        <div class="gallery-grid">
+            @foreach (var item in Model)
+            {
+                <figure class="gallery-card public-gallery-card">
+                    <a href="@item.ImageUrl" target="_blank" rel="noopener" aria-label="Ouvrir l’image : @item.Title">
+                        <img src="@item.ImageUrl" alt="@(item.AltText ?? item.Title)" loading="lazy" />
+                    </a>
+                    <figcaption class="gallery-card-body"><h2>@item.Title</h2>@if (!string.IsNullOrWhiteSpace(item.Description)) { <p>@item.Description</p> }</figcaption>
+                </figure>
+            }
+        </div>
+    </div>
+</section>

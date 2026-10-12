@@ -1,0 +1,111 @@
+@model Sahspn.ArtHistoire.Models.Bulletin
+@{
+    ViewData["Title"] = (ViewBag.OriginalNumber is int original && original <= 0) ? "Nouveau bulletin" : "Modifier le bulletin";
+    var isNew = ViewBag.OriginalNumber is int originalValue ? originalValue <= 0 : false;
+    var originalNumber = ViewBag.OriginalNumber is int value ? value : Model.Number;
+}
+<section class="section admin-section">
+    <div class="container">
+        <p class="eyebrow">Administration · Bulletins</p>
+        <h1>@(isNew ? "Nouveau bulletin" : "Modifier le bulletin")</h1>
+        <p class="admin-intro">Renseignez les informations du bulletin, puis ajoutez sa couverture et son document PDF. Les fichiers sont enregistrés sur le serveur et leurs chemins sont conservés dans la base sélectionnée.</p>
+
+        <form action="/administration/bulletins/enregistrer" method="post" enctype="multipart/form-data" class="admin-login-form bulletin-form">
+            @Html.AntiForgeryToken()
+            
+            <input type="hidden" name="originalNumber" value="@originalNumber" />
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CoverImage" />
+            <input type="hidden" asp-for="DocumentUrl" />
+
+            <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+
+            <div class="form-field">
+                <label asp-for="Number">Numéro</label>
+                <input asp-for="Number" type="number" min="1" required />
+                <span asp-validation-for="Number" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="Title">Titre</label>
+                <input asp-for="Title" maxlength="180" required />
+                <span asp-validation-for="Title" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="Content">Contenu</label>
+                <textarea asp-for="Content" rows="8"></textarea>
+                <span asp-validation-for="Content" class="field-validation-error"></span>
+            </div>
+
+            <div class="upload-grid">
+                <section class="upload-card" aria-labelledby="cover-upload-title">
+                    <div class="upload-card-heading">
+                        <span class="upload-icon" aria-hidden="true">▧</span>
+                        <div>
+                            <h2 id="cover-upload-title">Couverture du bulletin</h2>
+                            <p>Image JPG, PNG ou WebP · 8 Mo maximum</p>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(Model.CoverImage))
+                    {
+                        <div class="current-file">
+                            <img src="@Model.CoverImage" alt="Couverture actuelle" class="cover-preview" />
+                            <div><strong>Couverture actuelle</strong><a href="@Model.CoverImage" target="_blank" rel="noopener">Afficher le fichier</a></div>
+                        </div>
+                    }
+                    <label class="file-picker" for="coverFile">
+                        <input id="coverFile" name="coverFile" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" />
+                        <span class="file-picker-button">Choisir une image</span>
+                        <span class="file-picker-name" data-file-name="coverFile">Aucun fichier sélectionné</span>
+                    </label>
+                    <p class="upload-help">Si vous ne sélectionnez pas de nouvelle image, la couverture actuelle est conservée.</p>
+                </section>
+
+                <section class="upload-card" aria-labelledby="pdf-upload-title">
+                    <div class="upload-card-heading">
+                        <span class="upload-icon" aria-hidden="true">PDF</span>
+                        <div>
+                            <h2 id="pdf-upload-title">Document du bulletin</h2>
+                            <p>PDF uniquement · 25 Mo maximum</p>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(Model.DocumentUrl))
+                    {
+                        <div class="current-file current-pdf">
+                            <span class="pdf-file-icon" aria-hidden="true">PDF</span>
+                            <div><strong>Document actuel</strong><a href="@Model.DocumentUrl" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+                        </div>
+                    }
+                    <label class="file-picker" for="documentFile">
+                        <input id="documentFile" name="documentFile" type="file" accept="application/pdf,.pdf" />
+                        <span class="file-picker-button">Choisir un PDF</span>
+                        <span class="file-picker-name" data-file-name="documentFile">Aucun fichier sélectionné</span>
+                    </label>
+                    <p class="upload-help">Si vous ne sélectionnez pas de nouveau PDF, le document actuel est conservé.</p>
+                </section>
+            </div>
+
+            <div class="form-field">
+                <label asp-for="PublishedAt">Date de publication</label>
+                <input asp-for="PublishedAt" type="date" />
+                <span asp-validation-for="PublishedAt" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-actions">
+                <button class="button" type="submit">@(isNew ? "Créer le bulletin" : "Enregistrer les modifications")</button>
+                <a class="button button-secondary" asp-action="Bulletins">Annuler</a>
+            </div>
+        </form>
+    </div>
+</section>
+@section Scripts {
+    <script>
+        document.querySelectorAll('input[type="file"][data-file-name], input[type="file"]').forEach(function (input) {
+            input.addEventListener('change', function () {
+                const target = document.querySelector('[data-file-name="' + input.id + '"]');
+                if (target) target.textContent = input.files && input.files.length ? input.files[0].name : 'Aucun fichier sélectionné';
+            });
+        });
+    </script>
+}

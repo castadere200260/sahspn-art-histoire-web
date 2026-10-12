@@ -1,0 +1,36 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.DocumentStudy>
+@{
+    ViewData["Title"] = "Gestion des documents et études";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Administration</p><h1>Documents / Études</h1>
+        @if (TempData["AdminSuccess"] is string success)
+        {
+            <p class="admin-success" role="status">@success</p>
+        }
+        @if (TempData["AdminError"] is string error)
+        {
+            <p class="validation-summary" role="alert">@error</p>
+        }
+        <p><a class="button" asp-action="NewDocumentStudy">+ Ajouter un document ou une étude</a> <a asp-action="Index">Retour au tableau de bord</a></p>
+        @if (Model.Count == 0)
+        {
+            <div class="admin-empty-state">Aucun document ou étude enregistré.</div>
+        }
+        else
+        {
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead><tr><th>Titre</th><th>Type</th><th>Publication</th><th>Visibilité</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr><td>@item.Title</td><td>@(item.Type == Sahspn.ArtHistoire.Models.DocumentStudyType.Document ? "Document" : "Étude")</td><td>@(item.PublishedAt?.ToString("dd/MM/yyyy") ?? "—")</td><td>@(item.IsPublished ? "Publié" : "Masqué")</td><td><a asp-action="EditDocumentStudy" asp-route-id="@item.Id">Modifier</a> <form asp-action="DeleteDocumentStudy" asp-route-id="@item.Id" method="post" class="inline-form" onsubmit="return confirm('Supprimer cet élément ?')">@Html.AntiForgeryToken()<button type="submit" class="text-danger">Supprimer</button></form></td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>

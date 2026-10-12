@@ -1,0 +1,37 @@
+@model Sahspn.ArtHistoire.Models.LibraryItem
+@{
+    ViewData["Title"] = Model.Title;
+}
+<section class="section">
+    <div class="container">
+        <a class="button button-dark" href="/bibliotheque">← Retour à la bibliothèque</a>
+      
+        <h1>@Model.Title</h1>
+
+
+        @if (!string.IsNullOrWhiteSpace(Model.Author))
+        {
+            <p class="admin-intro">Par @Model.Author</p>
+        }
+        <div class="document-detail-grid">
+            @if (!string.IsNullOrWhiteSpace(Model.CoverImage))
+            {
+                <img src="@Model.CoverImage" alt="Couverture de @Model.Title" loading="lazy" />
+            }
+            <div>
+                @if (!string.IsNullOrWhiteSpace(Model.Summary))
+                {
+                    <p class="lead">@Model.Summary</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.Content))
+                {
+                    <div class="rich-content"><p>@Model.Content</p></div>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.DocumentUrl))
+                {
+                    <p><a class="button" href="@Model.DocumentUrl" target="_blank" rel="noopener">Consulter le document PDF ↗</a></p>
+                }
+            </div>
+        </div>
+    </div>
+</section>

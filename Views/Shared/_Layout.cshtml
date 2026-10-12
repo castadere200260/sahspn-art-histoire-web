@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Société d’Art et d’Histoire de Sarlat et du Périgord Noir : histoire locale, patrimoine, recherches et bulletins." />
+    <title>@ViewData["Title"] · SAHSPN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="topline"><div class="container top-inner"><span>Préserver · Comprendre · Transmettre</span><span>Sarlat & Périgord Noir</span></div></div>
+    <header class="site-header">
+        <div class="container nav-wrap">
+            <a class="brand" asp-controller="Home" asp-action="Index" aria-label="SAHSPN - Accueil"><span class="brand-mark">S<span>✦</span></span><span class="brand-copy"><strong>SAHSPN</strong><small>Société d’Art et d’Histoire<br>de Sarlat et du Périgord Noir</small></span></a>
+            <button class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false" id="navToggle"><span></span><span></span><span></span></button>
+            <nav class="main-nav" id="mainNav">
+                <a asp-controller="Pages" asp-action="Details" asp-route-slug="association">Association</a>
+                <a asp-controller="Bulletins" asp-action="Index">Bulletins</a>
+                <a asp-controller="PublicDirectory" asp-action="Library">Bibliothèque</a>
+                <a asp-controller="PublicDirectory" asp-action="DocumentsStudies">Documents</a>
+                <a asp-controller="PublicDirectory" asp-action="Gallery">Galerie</a>
+                <a asp-controller="PublicDirectory" asp-action="Appointments">Actualités</a>
+                <a asp-controller="PublicDirectory" asp-action="Shop">Boutique</a>
+                <a asp-controller="PublicDirectory" asp-action="Partners">Partenaires</a>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Admin" asp-action="Index">Administration</a>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="nav-logout">@Html.AntiForgeryToken()<button type="submit">Déconnexion</button></form>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login">Connexion</a>
+                }
+
+    </header>
+
+
+    @if (User.IsInRole("Administrator"))
+    {
+        <nav class="admin-subnav" aria-label="Menu d’administration">
+            <div class="container admin-subnav-inner">
+                <span class="admin-subnav-label">Administration</span>
+                <a asp-controller="Admin" asp-action="Index">Tableau de bord</a>
+                <a asp-controller="Admin" asp-action="Bulletins">Bulletins</a>
+                <a asp-controller="Admin" asp-action="Library">Bibliothèque</a>
+                <a asp-controller="Admin" asp-action="DocumentsStudies">Documents</a>
+                <a asp-controller="Admin" asp-action="Gallery">Galerie</a>
+                <a asp-controller="Admin" asp-action="Members">Membres</a>
+                <a asp-controller="Admin" asp-action="Appointments">Actualités</a>
+                <a asp-controller="Admin" asp-action="Shop">Boutique</a>
+                <a asp-controller="Admin" asp-action="Partners">Partenaires</a>
+                <a asp-controller="Admin" asp-action="Users">Utilisateurs</a>
+            </div>
+        </nav>
+    }
+    <main>@RenderBody()</main>
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div>
+                <a class="brand footer-brand" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark">
+                        S<span>✦</span>
+                    </span><span class="brand-copy">
+                        <strong>SAHSPN</strong>
+                        <small>Société d’Art et d’Histoire<br>de Sarlat et du Périgord Noir</small>
+                    </span>
+                </a>
+                <p>Faire vivre la mémoire et le patrimoine du Périgord Noir depuis 1973.</p>
+            </div>
+            <div>
+                <a asp-controller="Pages" asp-action="Details" asp-route-slug="association">Notre association</a>
+                <a asp-controller="PublicDirectory" asp-action="Members">Membres</a>
+                <a asp-controller="PublicDirectory" asp-action="Partners">Partenaires</a>
+            </div>
+            <div>
+                <p>Vous vous intéressez à l’histoire ou au patrimoine local</p>
+                <a class="footer-link" asp-controller="Pages" asp-action="Contact">Prendre contact <span>↗</span></a>
+            </div>
+        </div><div class="container footer-bottom"><span>© @DateTime.Now.Year SAHSPN</span><span>Patrimoine · Histoire · Transmission</span></div>
+    </footer>
+    <script src="~/js/site.js" asp-append-version="true"></script>@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

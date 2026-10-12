@@ -1,0 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using Sahspn.ArtHistoire.Data;
+using Sahspn.ArtHistoire.Models;
+namespace Sahspn.ArtHistoire.Storage;
+public sealed class MySqlAdminManagementStore(SahspDbContext db) : IAdminManagementStore
+{
+ public async Task<IReadOnlyList<Bulletin>> GetBulletinsAsync(CancellationToken ct) => await db.Bulletins.AsNoTracking().OrderByDescending(x=>x.Number).ToListAsync(ct);
+ public async Task SaveBulletinAsync(Bulletin x,int originalNumber,CancellationToken ct){ var isNew=originalNumber<=0; if(isNew) db.Bulletins.Add(x); else { var existing=await db.Bulletins.FirstOrDefaultAsync(b=>b.Number==originalNumber,ct); if(existing is null) throw new InvalidOperationException($"Bulletin {originalNumber} introuvable."); existing.Number=x.Number; existing.Title=x.Title; existing.Content=x.Content; existing.CoverImage=x.CoverImage; existing.DocumentUrl=x.DocumentUrl; existing.PublishedAt=x.PublishedAt; } await db.SaveChangesAsync(ct); }
+ public async Task DeleteBulletinAsync(int number,CancellationToken ct){var x=await db.Bulletins.FirstOrDefaultAsync(x=>x.Number==number,ct);if(x is null)throw new InvalidOperationException($"Bulletin {number} introuvable.");db.Remove(x);await db.SaveChangesAsync(ct);}
+ public async Task<IReadOnlyList<Member>> GetMembersAsync(CancellationToken ct)=>await db.Members.AsNoTracking().OrderBy(x=>x.FullName).ToListAsync(ct);
+ public async Task SaveMemberAsync(Member x,CancellationToken ct){var isNew=x.Id<=0;if(isNew)db.Members.Add(x);else {var existing=await db.Members.FirstOrDefaultAsync(m=>m.Id==x.Id,ct);if(existing is null)throw new InvalidOperationException($"Membre {x.Id} introuvable.");existing.FullName=x.FullName;existing.Email=x.Email;existing.Phone=x.Phone;existing.JoinedAt=x.JoinedAt;existing.IsActive=x.IsActive;}await db.SaveChangesAsync(ct);}
+ public async Task DeleteMemberAsync(int id,CancellationToken ct){var x=await db.Members.FindAsync(new object?[]{id},ct);if(x is null)throw new InvalidOperationException($"Membre {id} introuvable.");db.Remove(x);await db.SaveChangesAsync(ct);}
+ public async Task<IReadOnlyList<Appointment>> GetAppointmentsAsync(CancellationToken ct)=>await db.Appointments.AsNoTracking().OrderBy(x=>x.StartsAt).ToListAsync(ct);
+ public async Task SaveAppointmentAsync(Appointment x,CancellationToken ct){var isNew=x.Id<=0;if(isNew)db.Appointments.Add(x);else {var existing=await db.Appointments.FirstOrDefaultAsync(a=>a.Id==x.Id,ct);if(existing is null)throw new InvalidOperationException($"Rendez-vous {x.Id} introuvable.");existing.Title=x.Title;existing.Description=x.Description;existing.StartsAt=x.StartsAt;existing.EndsAt=x.EndsAt;existing.Location=x.Location;}await db.SaveChangesAsync(ct);}
+ public async Task DeleteAppointmentAsync(int id,CancellationToken ct){var x=await db.Appointments.FindAsync(new object?[]{id},ct);if(x is null)throw new InvalidOperationException($"Rendez-vous {id} introuvable.");db.Remove(x);await db.SaveChangesAsync(ct);}
+ public async Task<IReadOnlyList<AdminUser>> GetAdminUsersAsync(CancellationToken ct)=>await db.AdminUsers.AsNoTracking().OrderBy(x=>x.Username).ToListAsync(ct);
+ public async Task SaveAdminUserAsync(AdminUser x,CancellationToken ct){var isNew=x.Id<=0;if(isNew)db.AdminUsers.Add(x);else {var existing=await db.AdminUsers.FirstOrDefaultAsync(u=>u.Id==x.Id,ct);if(existing is null)throw new InvalidOperationException($"Utilisateur {x.Id} introuvable.");existing.Username=x.Username;existing.IsActive=x.IsActive;if(!string.IsNullOrWhiteSpace(x.PasswordHash))existing.PasswordHash=x.PasswordHash;} await db.SaveChangesAsync(ct);}
+ public async Task DeleteAdminUserAsync(int id,CancellationToken ct){var x=await db.AdminUsers.FindAsync(new object?[]{id},ct);if(x is null)throw new InvalidOperationException($"Utilisateur {id} introuvable.");db.Remove(x);await db.SaveChangesAsync(ct);}
+}

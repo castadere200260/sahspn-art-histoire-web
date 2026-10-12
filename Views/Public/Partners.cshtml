@@ -1,0 +1,38 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.Partner>
+@{
+    ViewData["Title"] = "Nos partenaires";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">L’association · Partenaires</p><div class="admin-page-heading"><div><h1>Nos partenaires</h1><p>La Société d’Art et d’Histoire de Sarlat et du Périgord Noir remercie les partenaires qui contribuent à faire vivre et transmettre le patrimoine local.</p></div></div>
+        @if (Model.Count == 0)
+        {
+            <div class="admin-empty-state">La liste des partenaires sera bientôt disponible.</div>
+        }
+        <div class="bulletin-grid partner-grid">
+            @foreach (var partner in Model)
+            {
+                <article class="bulletin-card partner-card">
+                    @if (!string.IsNullOrWhiteSpace(partner.LogoUrl))
+                    {
+                        <div class="partner-logo-wrap"><img src="@partner.LogoUrl" alt="Logo de @partner.Name" loading="lazy" /></div>
+                    }
+                    else
+                    {
+
+                        <div class="cover-placeholder partner-placeholder"><span>SAHSPN</span><strong>@partner.Name</strong><small>Partenaire</small></div>
+                    }
+                    <h3>@partner.Name</h3>
+                    @if (!string.IsNullOrWhiteSpace(partner.Description))
+                    {
+                        <p>@partner.Description</p>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(partner.WebsiteUrl))
+                    {
+                        <a class="card-link" href="@partner.WebsiteUrl" target="_blank" rel="noopener noreferrer">Visiter le site <span>↗</span></a>
+                    }
+                </article>
+            }
+        </div>
+    </div>
+</section>

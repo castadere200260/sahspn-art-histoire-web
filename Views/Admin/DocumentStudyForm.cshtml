@@ -1,0 +1,29 @@
+@model Sahspn.ArtHistoire.Models.DocumentStudy
+@{
+    var isNew = Model.Id <= 0; ViewData["Title"] = isNew ? "Nouveau document / étude" : "Modifier document / étude";
+}
+<section class="section admin-section">
+    <div class="container">
+        <p class="eyebrow">Administration · Documents / Études</p><h1>@ViewData["Title"]</h1>
+        <p class="admin-intro">Ajoutez un document ou une étude. Seuls les éléments publiés apparaissent sur la page publique et dans les résultats de recherche.</p>
+        <form asp-action="SaveDocumentStudy" method="post" enctype="multipart/form-data" class="admin-login-form">
+            @Html.AntiForgeryToken()<input type="hidden" asp-for="Id" /><input type="hidden" asp-for="CreatedAtUtc" /><input type="hidden" asp-for="UpdatedAtUtc" /><input type="hidden" asp-for="CoverImage" /><input type="hidden" asp-for="DocumentUrl" />
+            <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+            <div class="form-field"><label asp-for="Title">Titre</label><input asp-for="Title" maxlength="180" required /><span asp-validation-for="Title" class="field-validation-error"></span></div>
+            <div class="form-field"><label asp-for="Type">Type</label><select asp-for="Type"><option value="Document">Document</option><option value="Etude">Étude</option></select></div>
+            <div class="form-field"><label asp-for="Summary">Résumé</label><textarea asp-for="Summary" rows="3" maxlength="3000"></textarea></div>
+            <div class="form-field"><label asp-for="Content">Contenu / notes de recherche</label><textarea asp-for="Content" rows="8"></textarea></div>
+            <div class="form-field"><label asp-for="PublishedAt">Date de publication</label><input asp-for="PublishedAt" type="date" /></div>
+            <div class="form-field"><label for="coverFile">Couverture (JPG, PNG, WebP · 8 Mo max.)</label><input id="coverFile" name="coverFile" type="file" accept=".jpg,.jpeg,.png,.webp" />@if(!string.IsNullOrWhiteSpace(Model.CoverImage)){
+            <p><a href="@Model.CoverImage" target="_blank" rel="noopener">Voir la couverture actuelle</a></p>
+                        }
+</div>
+            <div class="form-field"><label for="documentFile">Fichier PDF (25 Mo max.)</label><input id="documentFile" name="documentFile" type="file" accept=".pdf,application/pdf" />@if(!string.IsNullOrWhiteSpace(Model.DocumentUrl)){
+            <p><a href="@Model.DocumentUrl" target="_blank" rel="noopener">Ouvrir le document actuel</a></p>
+                        }
+</div>
+            <div class="form-field"><label asp-for="IsPublished">Publication</label><input asp-for="IsPublished" type="checkbox" /> <span>Visible sur le site public</span></div>
+            <div class="form-actions"><button class="button" type="submit">@(isNew ? "Créer" : "Enregistrer les modifications")</button><a class="button button-secondary" asp-action="DocumentsStudies">Annuler</a></div>
+        </form>
+    </div>
+</section>

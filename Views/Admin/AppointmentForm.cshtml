@@ -1,0 +1,25 @@
+@model Sahspn.ArtHistoire.Models.Appointment
+@{
+    ViewData["Title"] = "Actualités"; var isNew = Model.Id == 0;
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Administration Actualites</p>
+        <h1>@(isNew ? "Nouvelle actualité" : "Modifier Actualité")</h1>
+        <form action="/administration/rendez-vous/enregistrer" method="post" class="admin-login-form">
+            @Html.AntiForgeryToken()<div asp-validation-summary="All" class="validation-summary" role="alert" aria-live="assertive"></div>
+            <input type="hidden" asp-for="Id" /><label asp-for="Title">Titre</label>
+            <input asp-for="Title" /><span asp-validation-for="Title"></span>
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" rows="5"></textarea>
+            <label asp-for="StartsAt">Début</label>
+            <input asp-for="StartsAt" type="datetime-local" step="60" />
+            <label asp-for="EndsAt">Fin</label>
+            <input asp-for="EndsAt" type="datetime-local" step="60" />
+            <label asp-for="Location">Lieu</label>
+            <input asp-for="Location" />
+            <button class="button" type="submit">Enregistrer</button>
+            <a asp-action="Appointments">Annuler</a>
+        </form>
+    </div>
+</section>

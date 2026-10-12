@@ -1,0 +1,5 @@
+@model Sahspn.ArtHistoire.Models.Member
+@{
+    ViewData["Title"] = "Membre"; var isNew = Model.Id == 0;
+}
+<section class="section"><div class="container"><p class="eyebrow">Administration · Membres</p><h1>@(isNew ? "Nouveau membre" : "Modifier le membre")</h1><form action="/administration/membres/enregistrer" method="post" class="admin-login-form">@Html.AntiForgeryToken()<div asp-validation-summary="All" class="validation-summary" role="alert" aria-live="assertive"></div><input type="hidden" asp-for="Id" /><label asp-for="FullName">Nom complet</label><input asp-for="FullName" /><span asp-validation-for="FullName"></span><label asp-for="Email">E-mail</label><input asp-for="Email" /><label asp-for="Phone">Téléphone</label><input asp-for="Phone" /><label asp-for="JoinedAt">Date d’adhésion</label><input asp-for="JoinedAt" type="date" /><label><input asp-for="IsActive" type="checkbox" /> Adhésion active</label><button class="button" type="submit">Enregistrer</button><a asp-action="Members">Annuler</a></form></div></section>

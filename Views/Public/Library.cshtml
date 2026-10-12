@@ -1,0 +1,56 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.LibraryItem>
+@{
+    ViewData["Title"] = "Bibliothèque";
+}
+<section class="page-hero">
+    <div class="container">
+        <h1>La <em>bibliothèque.</em></h1><p>Explorez les ouvrages, les références et les ressources documentaires.</p>
+        <form class="search-form" method="get" action="/bibliotheque">
+            <input name="q" value="@ViewBag.Query" placeholder="Rechercher un titre, un auteur, un sujet…" aria-label="Rechercher dans la bibliothèque" /><button type="submit">Rechercher <span>→</span></button>
+        </form>
+    </div>
+</section>
+<section class="catalog-section">
+    <div class="container">
+        <div class="catalog-heading"><span>@ViewBag.Total éléments dans la bibliothèque</span><span>Ouvrages & ressources</span></div>@if(Model.Count==0){
+        <div class="admin-empty-state">Aucun résultat. Essayez une autre recherche.</div>
+                }else
+        {
+
+            <div class="bulletin-grid catalog-grid">
+                @foreach (var item in Model)
+                {
+                    <a class="bulletin-card" asp-controller="PublicDirectory" asp-action="LibraryDetails" asp-route-id="@item.Id">
+                        <div class="cover-wrap">
+                            @if (!string.IsNullOrWhiteSpace(item.CoverImage))
+                            {
+                                <img src="@item.CoverImage" alt="Couverture de @item.Title" loading="lazy" />
+                            }
+                            else
+                            {
+
+                                <div class="cover-placeholder"><span>SAHSPN</span><strong>BIBLIOTHÈQUE</strong><small>@(item.PublicationYear?.ToString() ?? "Ressources historiques")</small></div>
+                            }
+                            <span class="cover-arrow">↗</span>
+                        </div><div class="bulletin-meta">@(string.IsNullOrWhiteSpace(item.Category) ? "RESSOURCE" : item.Category.ToUpperInvariant()) <span>@(item.PublicationYear?.ToString() ?? "")</span></div><h3>@item.Title</h3>@if(!string.IsNullOrWhiteSpace(item.Author)){
+                        <p>@item.Author</p>
+                    }
+                    <span class="card-link">Consulter la fiche <span>→</span></span>
+                </a>
+            }
+        </div>
+                }
+        @if ((long)ViewBag.Total > 12)
+        {
+            <nav class="pagination" aria-label="Pagination">
+                @if ((int)ViewBag.Page > 1)
+                {
+                    <a href="/bibliotheque?q=@Uri.EscapeDataString((string?)ViewBag.Query ?? string.Empty)&page=@((int)ViewBag.Page - 1)">← Précédent</a>
+                }
+                <span>Page @ViewBag.Page</span>@if((int)ViewBag.Page*12<(long)ViewBag.Total){
+                <a href="/bibliotheque?q=@Uri.EscapeDataString((string?)ViewBag.Query ?? string.Empty)&page=@((int)ViewBag.Page + 1)">Suivant →</a>
+            }
+        </nav>
+                }
+    </div>
+</section>

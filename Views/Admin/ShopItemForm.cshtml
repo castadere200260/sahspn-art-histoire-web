@@ -1,0 +1,14 @@
+@model Sahspn.ArtHistoire.Models.ShopItem
+@using Sahspn.ArtHistoire.Models
+@{ var isNew = Model.Id <= 0; ViewData["Title"] = isNew ? "Nouvel article de boutique" : "Modifier un article"; }
+<section class="section"><div class="container"><p class="eyebrow">Administration · Boutique</p><h1>@(isNew ? "Ajouter un article" : "Modifier l’article")</h1>
+<p>Les articles publiés sont visibles dans le catalogue public. Aucun achat ni paiement n’est déclenché.</p>
+<form asp-action="SaveShopItem" method="post" class="admin-login-form">@Html.AntiForgeryToken()<div asp-validation-summary="All" class="validation-summary" role="alert"></div><input type="hidden" asp-for="Id" />
+<label asp-for="Title">Titre</label><input asp-for="Title" maxlength="180" required /><span asp-validation-for="Title"></span>
+<label asp-for="Type">Type d’article</label><select asp-for="Type" asp-items="Html.GetEnumSelectList<ShopItemType>()"></select>
+<label asp-for="Description">Description</label><textarea asp-for="Description" rows="5" maxlength="2000"></textarea>
+<label asp-for="Price">Prix (€)</label><input asp-for="Price" type="number" min="0" max="999999.99" step="0.01" required />
+<label asp-for="ImageUrl">URL ou chemin de l’image (facultatif)</label><input asp-for="ImageUrl" type="url" placeholder="https://… ou /uploads/…" />
+<label asp-for="DocumentUrl">Lien vers le document (facultatif)</label><input asp-for="DocumentUrl" placeholder="/uploads/documents/document.pdf" />
+<label><input asp-for="IsPublished" type="checkbox" /> Publier dans le catalogue public</label>
+<button class="button" type="submit">Enregistrer</button> <a asp-action="Shop">Annuler</a></form></div></section>

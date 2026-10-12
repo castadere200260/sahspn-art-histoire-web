@@ -1,0 +1,56 @@
+@model IReadOnlyList<Bulletin>
+@{
+    ViewData["Title"] = "Les bulletins";
+}
+<section class="page-hero">
+    <div class="container">
+        @* <div class="eyebrow dark-eyebrow"><span></span> Archives & publications</div> *@
+        <h1>Art & Histoire<br><em>en Périgord Noir.</em></h1>
+        <p>Retrouvez les bulletins de la Société et parcourez des décennies de recherches historiques.</p>
+        <form class="search-form" method="get">
+            <input name="q" value="@ViewBag.Query" placeholder="Rechercher un bulletin, un sujet, un numéro…" aria-label="Rechercher dans les bulletins" />
+            <button type="submit">
+                Rechercher <span>→</span>
+            </button>
+        </form>
+    </div>
+</section>
+<section class="catalog-section">
+    <div class="container">
+        <div class="catalog-heading"><span>@ViewBag.Total publications dans les archives</span><span>Les plus récents en premier</span></div><div class="bulletin-grid catalog-grid">
+            @foreach (var item in Model)
+            {
+                <a class="bulletin-card" asp-controller="Bulletins" asp-action="Details" asp-route-number="@item.Number">
+                    <div class="cover-wrap">
+                        @if (!string.IsNullOrWhiteSpace(item.CoverImage))
+                        {
+                            <img src="@item.CoverImage" alt="Couverture du bulletin @item.Number" loading="lazy" />
+                        }
+                        else
+                        {
+
+                            <div class="cover-placeholder"><span>ART & HISTOIRE</span><strong>PÉRIGORD<br>NOIR</strong><small>Bulletin n° @item.Number</small></div>
+                        }
+                        <span class="cover-arrow">↗</span>
+                    </div>
+                    <div class="bulletin-meta">
+                        ARCHIVES
+                        <span>N° @item.Number</span>
+                    </div><h3>@item.Title</h3><span class="card-link">Lire le sommaire <span>→</span></span>
+                </a>
+            }
+        </div>
+        @if ((int)ViewBag.Total > 12)
+        {
+            <nav class="pagination" aria-label="Pagination">
+                @if ((int)ViewBag.Page > 1)
+                {
+                    <a asp-route-page="@((int)ViewBag.Page - 1)" asp-route-q="@ViewBag.Query">← Précédent</a>
+                }
+                <span>Page @ViewBag.Page</span>@if((int)ViewBag.Page*12 < (int)ViewBag.Total){
+                <a asp-route-page="@((int)ViewBag.Page + 1)" asp-route-q="@ViewBag.Query">Suivant →</a>
+            }
+        </nav>
+                }
+    </div>
+</section>

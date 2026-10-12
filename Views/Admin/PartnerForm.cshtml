@@ -1,0 +1,19 @@
+@model Sahspn.ArtHistoire.Models.Partner
+@{
+    var isNew = Model.Id <= 0; ViewData["Title"] = isNew ? "Nouveau partenaire" : "Modifier un partenaire";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Administration · Partenaires</p><h1>@(isNew ? "Ajouter un partenaire" : "Modifier le partenaire")</h1>
+        <form asp-action="SavePartner" method="post" class="admin-login-form">
+            @Html.AntiForgeryToken()<div asp-validation-summary="All" class="validation-summary" role="alert"></div><input type="hidden" asp-for="Id" />
+            <label asp-for="Name">Nom du partenaire</label><input asp-for="Name" maxlength="160" required /><span asp-validation-for="Name"></span>
+            <label asp-for="Description">Description</label><textarea asp-for="Description" rows="4" maxlength="2000"></textarea><span asp-validation-for="Description"></span>
+            <label asp-for="WebsiteUrl">Site web (facultatif)</label><input asp-for="WebsiteUrl" type="url" maxlength="500" placeholder="https://…" /><span asp-validation-for="WebsiteUrl"></span>
+            <label asp-for="LogoUrl">URL ou chemin du logo (facultatif)</label><input asp-for="LogoUrl" maxlength="500" placeholder="https://… ou /images/partenaire.png" /><span asp-validation-for="LogoUrl"></span>
+            <label asp-for="DisplayOrder">Ordre d’affichage</label><input asp-for="DisplayOrder" type="number" min="0" step="1" /><span asp-validation-for="DisplayOrder"></span>
+            <label><input asp-for="IsPublished" type="checkbox" /> Afficher sur la page publique</label>
+            <button class="button" type="submit">Enregistrer</button> <a asp-action="Partners">Annuler</a>
+        </form>
+    </div>
+</section>

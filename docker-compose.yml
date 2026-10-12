@@ -1,0 +1,39 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: sahspn-mysql
+    profiles: ["mysql"]
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: sahspn
+      MYSQL_USER: sahsp_app
+      MYSQL_PASSWORD: ${SAHSP_MYSQL_PASSWORD:-CHANGE_ME_LOCAL_ONLY}
+      MYSQL_ROOT_PASSWORD: ${SAHSP_MYSQL_ROOT_PASSWORD:-CHANGE_ROOT_LOCAL_ONLY}
+    ports:
+      - "3306:3306"
+    volumes:
+      - sahspn_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${SAHSP_MYSQL_ROOT_PASSWORD:-CHANGE_ROOT_LOCAL_ONLY}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mongodb:
+    image: mongo:8.0
+    container_name: sahspn-mongodb
+    profiles: ["mongodb"]
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - sahspn_mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand({ ping: 1 }).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  sahspn_mysql_data:
+  sahspn_mongodb_data:

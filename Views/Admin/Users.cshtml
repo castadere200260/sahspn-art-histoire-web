@@ -1,0 +1,44 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.AdminUser>
+@{
+    ViewData["Title"] = "Gestion des utilisateurs";
+}
+<section class="section">
+    <div class="container">
+        <p class="eyebrow">Administration</p>
+        @if (TempData["AdminSuccess"] is string success)
+        {
+            <p class="alert alert-success" role="status">@success</p>
+        }
+        @if (TempData["AdminError"] is string error)
+        {
+            <p class="alert alert-danger" role="alert">@error</p>
+        }
+        <h1>Gestion des utilisateurs</h1>
+        <p>
+            <a class="button button-dark" asp-action="NewUser">+ Nouvel utilisateur</a>
+            <a class="button button-light" asp-action="Index">Retour au tableau de bord</a>
+        </p>
+        <p>Les mots de passe ne sont jamais affichés. Laissez le champ mot de passe vide lors d’une modification pour le conserver.</p>
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead><tr><th>Identifiant</th><th>Créé le (UTC)</th><th>Actif</th><th>Actions</th></tr></thead>
+                <tbody>
+                    @foreach (var x in Model)
+                    {
+                        <tr>
+                            <td>@x.Username</td>
+                            <td>@x.CreatedAtUtc.ToString("dd/MM/yyyy")</td>
+                            <td>@(x.IsActive ? "Oui" : "Non")</td>
+                            <td>
+                                <a asp-action="EditUser" asp-route-id="@x.Id">Modifier</a>
+                                <form asp-action="DeleteUser" asp-route-id="@x.Id" method="post" class="inline-form" onsubmit="return confirm('Supprimer cet utilisateur ?')">
+                                    @Html.AntiForgeryToken()<button class="text-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
