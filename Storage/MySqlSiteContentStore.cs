@@ -31,6 +31,54 @@ public sealed class MySqlSiteContentStore(SahspDbContext db, ContentSeeder seede
     public Task<SitePage?> GetPageAsync(string slug, CancellationToken cancellationToken = default) =>
         db.Pages.AsNoTracking().FirstOrDefaultAsync(x => x.Slug == slug, cancellationToken);
 
+    public async Task<IReadOnlyList<SitePage>> GetPagesAsync(CancellationToken cancellationToken = default) =>
+        await db.Pages.AsNoTracking()
+            .OrderBy(x => x.Title)
+            .ThenBy(x => x.Slug)
+            .ToListAsync(cancellationToken);
+
+    public async Task SavePageAsync(SitePage page, string? originalSlug, CancellationToken cancellationToken = default)
+    {
+        var isNew = string.IsNullOrWhiteSpace(originalSlug);
+        if (isNew)
+        {
+            if (await db.Pages.AnyAsync(x => x.Slug == page.Slug, cancellationToken))
+                throw new InvalidOperationException($"Le slug '{page.Slug}' est déjà utilisé.");
+
+            db.Pages.Add(new SitePage
+            {
+                Slug = page.Slug,
+                Title = page.Title,
+                Content = page.Content,
+                UpdatedAt = DateTime.UtcNow
+            });
+        }
+        else
+        {
+            var entity = await db.Pages.FirstOrDefaultAsync(x => x.Slug == originalSlug, cancellationToken)
+                ?? throw new KeyNotFoundException($"La page '{originalSlug}' n'existe plus.");
+
+            if (!string.Equals(originalSlug, page.Slug, StringComparison.Ordinal)
+                && await db.Pages.AnyAsync(x => x.Slug == page.Slug, cancellationToken))
+                throw new InvalidOperationException($"Le slug '{page.Slug}' est déjà utilisé.");
+
+            entity.Slug = page.Slug;
+            entity.Title = page.Title;
+            entity.Content = page.Content;
+            entity.UpdatedAt = DateTime.UtcNow;
+        }
+
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeletePageAsync(string slug, CancellationToken cancellationToken = default)
+    {
+        var page = await db.Pages.FirstOrDefaultAsync(x => x.Slug == slug, cancellationToken);
+        if (page is null) return;
+        db.Pages.Remove(page);
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task AddContactMessageAsync(ContactMessage message, CancellationToken cancellationToken = default)
     {
         db.ContactMessages.Add(message);

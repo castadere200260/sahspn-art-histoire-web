@@ -66,6 +66,62 @@ public sealed class MongoSiteContentStore : ISiteContentStore
         return item is null ? null : new SitePage { Id = 0, Slug = item.Slug, Title = item.Title, Content = item.Content, UpdatedAt = item.UpdatedAt };
     }
 
+    public async Task<IReadOnlyList<SitePage>> GetPagesAsync(CancellationToken cancellationToken = default)
+    {
+        var pages = await _pages.Find(FilterDefinition<PageDocument>.Empty)
+            .SortBy(x => x.Title)
+            .ThenBy(x => x.Slug)
+            .ToListAsync(cancellationToken);
+
+        return pages.Select(x => new SitePage
+        {
+            Id = 0,
+            Slug = x.Slug,
+            Title = x.Title,
+            Content = x.Content,
+            UpdatedAt = x.UpdatedAt
+        }).ToList();
+    }
+
+    public async Task SavePageAsync(SitePage page, string? originalSlug, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(originalSlug))
+        {
+            if (await _pages.Find(x => x.Slug == page.Slug).AnyAsync(cancellationToken))
+                throw new InvalidOperationException($"Le slug '{page.Slug}' est déjà utilisé.");
+
+            await _pages.InsertOneAsync(new PageDocument
+            {
+                Slug = page.Slug,
+                Title = page.Title,
+                Content = page.Content,
+                UpdatedAt = DateTime.UtcNow
+            }, cancellationToken: cancellationToken);
+            return;
+        }
+
+        if (!string.Equals(originalSlug, page.Slug, StringComparison.Ordinal)
+            && await _pages.Find(x => x.Slug == page.Slug).AnyAsync(cancellationToken))
+            throw new InvalidOperationException($"Le slug '{page.Slug}' est déjà utilisé.");
+
+        var update = Builders<PageDocument>.Update
+            .Set(x => x.Slug, page.Slug)
+            .Set(x => x.Title, page.Title)
+            .Set(x => x.Content, page.Content)
+            .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+        var result = await _pages.UpdateOneAsync(
+            x => x.Slug == originalSlug,
+            update,
+            cancellationToken: cancellationToken);
+
+        if (result.MatchedCount == 0)
+            throw new KeyNotFoundException($"La page '{originalSlug}' n'existe plus.");
+    }
+
+    public async Task DeletePageAsync(string slug, CancellationToken cancellationToken = default) =>
+        await _pages.DeleteOneAsync(x => x.Slug == slug, cancellationToken);
+
     public async Task AddContactMessageAsync(ContactMessage message, CancellationToken cancellationToken = default) =>
         await _contacts.InsertOneAsync(new ContactDocument { Name = message.Name, Email = message.Email, Subject = message.Subject, Message = message.Message, CreatedAt = message.CreatedAt }, cancellationToken: cancellationToken);
 

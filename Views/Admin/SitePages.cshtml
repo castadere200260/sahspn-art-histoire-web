@@ -14,6 +14,10 @@
         {
             <p class="success-message">@success</p>
         }
+        @if (TempData["AdminError"] is string error)
+        {
+            <p class="validation-summary">@error</p>
+        }
         <div class="admin-table-wrap">
             <table class="admin-table">
                 <thead>
@@ -32,7 +36,13 @@
                             <td>@sitePage.Title</td>
                             <td><a asp-controller="Pages" asp-action="Details" asp-route-slug="@sitePage.Slug" target="_blank" rel="noopener">/@sitePage.Slug</a></td>
                             <td>@sitePage.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
-                            <td><a asp-action="EditSitePage" asp-route-slug="@sitePage.Slug">Modifier</a></td>
+                            <td>
+                                <a asp-action="EditSitePage" asp-route-slug="@sitePage.Slug">Modifier</a>
+                                <form asp-action="DeleteSitePage" asp-route-slug="@sitePage.Slug" method="post" style="display:inline" onsubmit="return confirm('Supprimer cette page ?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="button-link">Supprimer</button>
+                                </form>
+                            </td>
                         </tr>
                     }
                 }

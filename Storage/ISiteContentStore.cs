@@ -9,6 +9,9 @@ public interface ISiteContentStore
     Task<(IReadOnlyList<Bulletin> Items, long Total)> SearchBulletinsAsync(string? query, int page, int pageSize, CancellationToken cancellationToken = default);
     Task<Bulletin?> GetBulletinAsync(int number, CancellationToken cancellationToken = default);
     Task<SitePage?> GetPageAsync(string slug, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<SitePage>> GetPagesAsync(CancellationToken cancellationToken = default);
+    Task SavePageAsync(SitePage page, string? originalSlug, CancellationToken cancellationToken = default);
+    Task DeletePageAsync(string slug, CancellationToken cancellationToken = default);
     Task AddContactMessageAsync(ContactMessage message, CancellationToken cancellationToken = default);
     Task<AdminUser?> FindAdminUserAsync(string username, CancellationToken cancellationToken = default);
     Task CreateAdminUserAsync(AdminUser user, CancellationToken cancellationToken = default);

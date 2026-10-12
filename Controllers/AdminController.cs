@@ -226,6 +226,102 @@ public sealed class AdminController(IAdminManagementStore data, ISiteContentStor
     }
 
 
+    [HttpGet("pages")]
+    public async Task<IActionResult> SitePages(CancellationToken ct) =>
+        View("SitePages", await content.GetPagesAsync(ct));
+
+    [HttpGet("pages/nouvelle")]
+    public IActionResult NewSitePage() =>
+        View("SitePageForm", new SitePageFormViewModel());
+
+    [HttpGet("pages/{slug}/modifier")]
+    public async Task<IActionResult> EditSitePage(string slug, CancellationToken ct)
+    {
+        var page = await content.GetPageAsync(slug, ct);
+        return page is null
+            ? NotFound()
+            : View("SitePageForm", SitePageFormViewModel.FromPage(page, page.Slug));
+    }
+
+    [HttpPost("pages/enregistrer"), ValidateAntiForgeryToken]
+    public async Task<IActionResult> SaveSitePage(SitePageFormViewModel model, CancellationToken ct)
+    {
+        model.Title = model.Title?.Trim() ?? string.Empty;
+        model.Slug = model.Slug?.Trim().ToLowerInvariant() ?? string.Empty;
+
+        if (!ModelState.IsValid)
+            return View("SitePageForm", model);
+
+        try
+        {
+            var originalSlug = string.IsNullOrWhiteSpace(model.OriginalSlug)
+                ? null
+                : model.OriginalSlug.Trim().ToLowerInvariant();
+
+            if (originalSlug is null)
+            {
+                if (await content.GetPageAsync(model.Slug, ct) is not null)
+                {
+                    ModelState.AddModelError(nameof(model.Slug), "Ce slug est déjà utilisé.");
+                    return View("SitePageForm", model);
+                }
+            }
+            else
+            {
+                if (await content.GetPageAsync(originalSlug, ct) is null)
+                    return NotFound();
+
+                if (!string.Equals(originalSlug, model.Slug, StringComparison.Ordinal)
+                    && await content.GetPageAsync(model.Slug, ct) is not null)
+                {
+                    ModelState.AddModelError(nameof(model.Slug), "Ce slug est déjà utilisé par une autre page.");
+                    return View("SitePageForm", model);
+                }
+            }
+
+            var page = new SitePage
+            {
+                Slug = model.Slug,
+                Title = model.Title,
+                Content = model.Content,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            await content.SavePageAsync(page, originalSlug, ct);
+            TempData["AdminSuccess"] = originalSlug is null ? "Page créée." : "Page modifiée.";
+            return RedirectToAction(nameof(SitePages));
+        }
+        catch (InvalidOperationException ex)
+        {
+            logger.LogInformation(ex, "Conflit lors de l'enregistrement de la page {Slug}", model.Slug);
+            ModelState.AddModelError(nameof(model.Slug), "Ce slug est déjà utilisé ou la page a été modifiée entre-temps.");
+            return View("SitePageForm", model);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Erreur lors de l'enregistrement de la page {Slug}", model.Slug);
+            ModelState.AddModelError(string.Empty, "La page n'a pas été enregistrée. Vérifiez la base de données et les journaux.");
+            return View("SitePageForm", model);
+        }
+    }
+
+    [HttpPost("pages/{slug}/supprimer"), ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteSitePage(string slug, CancellationToken ct)
+    {
+        try
+        {
+            await content.DeletePageAsync(slug, ct);
+            TempData["AdminSuccess"] = "Page supprimée.";
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Erreur lors de la suppression de la page {Slug}", slug);
+            TempData["AdminError"] = "La page n'a pas pu être supprimée.";
+        }
+
+        return RedirectToAction(nameof(SitePages));
+    }
+
     [HttpGet("galerie")]
     public async Task<IActionResult> Gallery(CancellationToken ct) => View("~/Views/Admin/Gallery.cshtml", await content.GetGalleryImagesAsync(cancellationToken: ct));
 
