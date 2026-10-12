@@ -76,7 +76,8 @@ public sealed class MongoAdminManagementStore : IAdminManagementStore
         return docs.Select(d => new Member
         {
             Id = Int(d, "Id"), FullName = String(d, "FullName"), Email = String(d, "Email"),
-            Phone = NullableString(d, "Phone"), JoinedAt = Date(d, "JoinedAt"), IsActive = Bool(d, "IsActive", true)
+            Phone = NullableString(d, "Phone"), JoinedAt = Date(d, "JoinedAt"), IsActive = Bool(d, "IsActive", true),
+            IsBoardMember = Bool(d, "IsBoardMember", false), BoardPosition = NullableString(d, "BoardPosition"), ElectionDate = Date(d, "ElectionDate")
         }).OrderBy(x => x.FullName).ToList();
     }
 
@@ -90,7 +91,10 @@ public sealed class MongoAdminManagementStore : IAdminManagementStore
             ["Id"] = item.Id, ["FullName"] = item.FullName, ["Email"] = item.Email,
             ["Phone"] = item.Phone is null ? BsonNull.Value : new BsonString(item.Phone),
             ["JoinedAt"] = item.JoinedAt.HasValue ? new BsonDateTime(item.JoinedAt.Value) : BsonNull.Value,
-            ["IsActive"] = item.IsActive
+            ["IsActive"] = item.IsActive,
+            ["IsBoardMember"] = item.IsBoardMember,
+            ["BoardPosition"] = item.BoardPosition is null ? BsonNull.Value : new BsonString(item.BoardPosition),
+            ["ElectionDate"] = item.ElectionDate.HasValue ? new BsonDateTime(item.ElectionDate.Value) : BsonNull.Value
         };
         if (isNew) { await _members.InsertOneAsync(fields, cancellationToken: ct); return; }
         var result = await _members.UpdateOneAsync(AnyFieldEquals("Id", "id", item.Id), new BsonDocument("$set", fields), cancellationToken: ct);

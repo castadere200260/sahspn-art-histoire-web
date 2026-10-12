@@ -15,18 +15,18 @@
         }
         <div class="admin-page-heading">
             <div>
-                <h1>Membress de l’association.</h1>
+                <h1>Membres de l’association.</h1>
             </div>
-            <a class="button button-dark" asp-action="NewMember">+ Ajouter un membre</a>
+            <div><a class="button button-dark" asp-action="BoardMembers">Membres du bureau</a> <a class="button button-dark" asp-action="NewMember">+ Ajouter un membre</a></div>
         </div>
         <p class="admin-list-count">@Model.Count membre(s)</p>
         <div class="admin-table-wrap">
             <table class="admin-table">
-                <thead><tr><th>Nom</th><th>E-mail</th><th>Téléphone</th><th>Date d’adhésion</th><th>Statut</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Nom</th><th>E-mail</th><th>Téléphone</th><th>Date d’adhésion</th><th>Bureau</th><th>Poste</th><th>Élection</th><th>Statut</th><th>Actions</th></tr></thead>
                 <tbody>
                     @if (Model.Count == 0)
                     {
-                        <tr><td colspan="6" class="admin-empty-state">Aucun membre enregistré. Utilisez « Ajouter un membre » pour créer la première fiche.</td></tr>
+                        <tr><td colspan="9" class="admin-empty-state">Aucun membre enregistré. Utilisez « Ajouter un membre » pour créer la première fiche.</td></tr>
                     }
                     else
                     {
@@ -37,6 +37,9 @@
                                 <td>@(string.IsNullOrWhiteSpace(member.Email) ? "—" : member.Email)</td>
                                 <td>@(string.IsNullOrWhiteSpace(member.Phone) ? "—" : member.Phone)</td>
                                 <td>@(member.JoinedAt?.ToString("dd/MM/yyyy") ?? "—")</td>
+                                <td>@(member.IsBoardMember ? "Oui" : "Non")</td>
+                                <td>@(member.IsBoardMember && !string.IsNullOrWhiteSpace(member.BoardPosition) ? member.BoardPosition : "—")</td>
+                                <td>@(member.ElectionDate?.ToString("dd/MM/yyyy") ?? "—")</td>
                                 <td><span class="admin-status @(member.IsActive ? "is-active" : "is-inactive")">@(member.IsActive ? "Actif" : "Inactif")</span></td>
                                 <td class="admin-actions"><a asp-action="EditMember" asp-route-id="@member.Id">Modifier</a><form asp-action="DeleteMember" asp-route-id="@member.Id" method="post" class="inline-form" onsubmit="return confirm('Supprimer ce membre ?')">@Html.AntiForgeryToken()<button type="submit" class="text-danger">Supprimer</button></form></td>
                             </tr>

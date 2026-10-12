@@ -1,0 +1,38 @@
+@model IReadOnlyList<Sahspn.ArtHistoire.Models.Member>
+@{
+    ViewData["Title"] = "Le bureau";
+}
+<section class="section">
+    <div class="container">
+        <div class="admin-page-heading">
+            <div>
+                <h1>Le bureau de la Société d’Art et d’Histoire de Sarlat et du Périgord Noir</h1>
+            </div>
+        </div>
+        @if (Model.Count == 0)
+        {
+            <p class="admin-empty-state">La composition du bureau sera publiée prochainement.</p>
+        }
+        else
+        {
+
+            <div class="board-members-grid">
+                @foreach (var member in Model)
+                {
+                    <article class="board-member-card">
+                        <h2>@member.FullName</h2>
+                        @if (!string.IsNullOrWhiteSpace(member.BoardPosition))
+                        {
+                            <p class="board-member-position">@member.BoardPosition</p>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(member.Email))
+                        {
+                            <p class="board-member-position">@member.Email</p>
+                        }
+                    
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>

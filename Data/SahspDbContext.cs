@@ -18,6 +18,7 @@ public sealed class SahspDbContext(DbContextOptions<SahspDbContext> options) : D
     {
         modelBuilder.Entity<AdminUser>().HasIndex(x => x.Username).IsUnique();
         modelBuilder.Entity<Member>().HasIndex(x => x.Email);
+        modelBuilder.Entity<Member>().HasIndex(x => new { x.IsBoardMember, x.IsActive, x.BoardPosition });
         modelBuilder.Entity<Appointment>().HasIndex(x => x.StartsAt);
         modelBuilder.Entity<SitePage>().HasIndex(x => x.Slug).IsUnique();
         modelBuilder.Entity<GalleryImage>().HasKey(x => x.Id);

@@ -331,6 +331,7 @@ public sealed class AdminController(IAdminManagementStore data, ISiteContentStor
     [HttpPost("bulletins/{number:int}/supprimer"), ValidateAntiForgeryToken] public async Task<IActionResult> DeleteBulletin(int number, CancellationToken ct) { await data.DeleteBulletinAsync(number, ct); return RedirectToAction(nameof(Bulletins)); }
 
     [HttpGet("membres")] public async Task<IActionResult> Members(CancellationToken ct) => View(await data.GetMembersAsync(ct));
+    [HttpGet("membres/bureau")] public async Task<IActionResult> BoardMembers(CancellationToken ct) => View("BoardMembers", (await data.GetMembersAsync(ct)).Where(x => x.IsBoardMember).OrderBy(x => x.BoardPosition).ThenBy(x => x.FullName).ToList());
     [HttpGet("membres/nouveau")] public IActionResult NewMember() => View("MemberForm", new Member { JoinedAt = DateTime.Today, IsActive = true });
     [HttpGet("membres/{id:int}/modifier")] public async Task<IActionResult> EditMember(int id, CancellationToken ct) { var x = (await data.GetMembersAsync(ct)).FirstOrDefault(x => x.Id == id); return x is null ? NotFound() : View("MemberForm", x); }
     [HttpPost("membres/enregistrer"), ValidateAntiForgeryToken]

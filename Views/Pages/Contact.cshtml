@@ -4,18 +4,23 @@
 }
 <section class="page-hero">
     <div class="container">
-        @* <div class="eyebrow dark-eyebrow"><span></span> Parlons patrimoine</div> *@
-        <h1>Restons <em>en contact.</em></h1><p>Une question sur l’association, les publications ou les recherches en cours ? <br />Écrivez-nous.</p>
+        <h1>Restons <em>en contact.</em></h1>
+        <p>Une question sur l’association, les publications ? Écrivez-nous.</p>
+        <h3>
+            Société d'Art et d'Histoire de Sarlat et du Périgord Noir -BP 47 - 24201 SARLAT Cedex
+        </h3>
     </div>
 </section>
 <section class="page-content">
     <div class="container contact-layout">
         <div class="contact-aside">
-            <h2>Une passion commune pour le Périgord Noir.</h2><p>Nous serons heureux d’échanger avec vous au sujet de nos activités, des bulletins et de l’adhésion.</p>
+            <h2>Une passion commune pour le Périgord Noir.</h2>
+            <p>Nous serons heureux d’échanger avec vous au sujet de nos activités, des bulletins et de l’adhésion.</p>
         </div><div class="contact-form-wrap">
             @if (ViewBag.Sent == true)
             {
-                <div class="success-message"><strong>Merci pour votre message.</strong><p>Votre demande a bien été enregistrée.</p></div>
+                <div class="success-message"><strong>Merci pour votre message.</strong
+                ><p>Votre demande a bien été enregistrée.</p></div>
             }
             <form asp-action="Contact" method="post" class="contact-form">
                 <div asp-validation-summary="ModelOnly" class="validation"></div>

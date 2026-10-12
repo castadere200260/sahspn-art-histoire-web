@@ -19,6 +19,15 @@ public sealed class PublicDirectoryController(IAdminManagementStore data, IShopC
         return View("~/Views/Public/Members.cshtml", members.OrderBy(x => x.FullName).ToList());
     }
 
+    [HttpGet("bureau")]
+    public async Task<IActionResult> BoardMembers(CancellationToken ct)
+    {
+        var members = await data.GetMembersAsync(ct);
+        var boardMembers = members.Where(x => x.IsBoardMember && x.IsActive)
+            .OrderBy(x => x.BoardPosition).ThenBy(x => x.FullName).ToList();
+        return View("~/Views/Public/BoardMembers.cshtml", boardMembers);
+    }
+
     [HttpGet("rendez-vous")]
     public async Task<IActionResult> Appointments(CancellationToken ct)
     {
