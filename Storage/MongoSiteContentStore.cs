@@ -1,10 +1,10 @@
-using System.Text.Json;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
-using Sahspn.ArtHistoire.Models;
 using Sahspn.ArtHistoire.Configuration;
-using Microsoft.Extensions.Options;
+using Sahspn.ArtHistoire.Models;
+using System.Text.Json;
 
 namespace Sahspn.ArtHistoire.Storage;
 
@@ -183,10 +183,14 @@ public sealed class MongoSiteContentStore : ISiteContentStore
             var root = json.RootElement;
             var pageMap = new Dictionary<string, (string title, string slug)>
             {
-                ["historique.htm"] = ("L’association", "association"), ["actualites.htm"] = ("Actualités", "actualites"),
-                ["biblio.htm"] = ("Bibliothèque & ressources", "ressources"), ["ag.htm"] = ("Assemblée générale", "assemblee-generale"),
-                ["contact.htm"] = ("Contact", "contact"), ["liens.htm"] = ("Liens utiles", "liens"),
-                ["auteur.htm"] = ("Publications", "publications"), ["dernews.htm"] = ("Dernières nouvelles", "dernieres-nouvelles")
+                ["historique.htm"] = ("L’association", "association"),
+                ["actualites.htm"] = ("Actualités", "actualites"),
+                ["biblio.htm"] = ("Bibliothèque & ressources", "ressources"),
+                ["ag.htm"] = ("Assemblée générale", "assemblee-generale"),
+                ["contact.htm"] = ("Contact", "contact"),
+                ["liens.htm"] = ("Liens utiles", "liens"),
+                ["auteur.htm"] = ("Publications", "publications"),
+                ["dernews.htm"] = ("Dernières nouvelles", "dernieres-nouvelles")
             };
             if (await _pages.EstimatedDocumentCountAsync(cancellationToken: cancellationToken) == 0 && root.TryGetProperty("pages", out var pages))
             {

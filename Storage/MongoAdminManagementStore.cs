@@ -32,8 +32,11 @@ public sealed class MongoAdminManagementStore : IAdminManagementStore
         var docs = await _bulletins.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync(ct);
         return docs.Select(d => new Bulletin
         {
-            Number = Int(d, "Number"), Title = String(d, "Title"), Content = String(d, "Content"),
-            CoverImage = NullableString(d, "CoverImage"), DocumentUrl = NullableString(d, "DocumentUrl"),
+            Number = Int(d, "Number"),
+            Title = String(d, "Title"),
+            Content = String(d, "Content"),
+            CoverImage = NullableString(d, "CoverImage"),
+            DocumentUrl = NullableString(d, "DocumentUrl"),
             PublishedAt = Date(d, "PublishedAt")
         }).OrderByDescending(x => x.Number).ToList();
     }
@@ -75,9 +78,15 @@ public sealed class MongoAdminManagementStore : IAdminManagementStore
         var docs = await _members.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync(ct);
         return docs.Select(d => new Member
         {
-            Id = Int(d, "Id"), FullName = String(d, "FullName"), Email = String(d, "Email"),
-            Phone = NullableString(d, "Phone"), JoinedAt = Date(d, "JoinedAt"), IsActive = Bool(d, "IsActive", true),
-            IsBoardMember = Bool(d, "IsBoardMember", false), BoardPosition = NullableString(d, "BoardPosition"), ElectionDate = Date(d, "ElectionDate")
+            Id = Int(d, "Id"),
+            FullName = String(d, "FullName"),
+            Email = String(d, "Email"),
+            Phone = NullableString(d, "Phone"),
+            JoinedAt = Date(d, "JoinedAt"),
+            IsActive = Bool(d, "IsActive", true),
+            IsBoardMember = Bool(d, "IsBoardMember", false),
+            BoardPosition = NullableString(d, "BoardPosition"),
+            ElectionDate = Date(d, "ElectionDate")
         }).OrderBy(x => x.FullName).ToList();
     }
 
@@ -88,7 +97,9 @@ public sealed class MongoAdminManagementStore : IAdminManagementStore
         if (isNew) item.Id = await NextIdAsync(_members, "Id", "id", ct);
         var fields = new BsonDocument
         {
-            ["Id"] = item.Id, ["FullName"] = item.FullName, ["Email"] = item.Email,
+            ["Id"] = item.Id,
+            ["FullName"] = item.FullName,
+            ["Email"] = item.Email,
             ["Phone"] = item.Phone is null ? BsonNull.Value : new BsonString(item.Phone),
             ["JoinedAt"] = item.JoinedAt.HasValue ? new BsonDateTime(item.JoinedAt.Value) : BsonNull.Value,
             ["IsActive"] = item.IsActive,
@@ -112,8 +123,12 @@ public sealed class MongoAdminManagementStore : IAdminManagementStore
         var docs = await _appointments.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync(ct);
         return docs.Select(d => new Appointment
         {
-            Id = Int(d, "Id"), Title = String(d, "Title"), Description = NullableString(d, "Description"),
-            StartsAt = Date(d, "StartsAt") ?? DateTime.MinValue, EndsAt = Date(d, "EndsAt"), Location = NullableString(d, "Location")
+            Id = Int(d, "Id"),
+            Title = String(d, "Title"),
+            Description = NullableString(d, "Description"),
+            StartsAt = Date(d, "StartsAt") ?? DateTime.MinValue,
+            EndsAt = Date(d, "EndsAt"),
+            Location = NullableString(d, "Location")
         }).OrderBy(x => x.StartsAt).ToList();
     }
 
@@ -123,7 +138,8 @@ public sealed class MongoAdminManagementStore : IAdminManagementStore
         if (isNew) item.Id = await NextIdAsync(_appointments, "Id", "id", ct);
         var fields = new BsonDocument
         {
-            ["Id"] = item.Id, ["Title"] = item.Title,
+            ["Id"] = item.Id,
+            ["Title"] = item.Title,
             ["Description"] = item.Description is null ? BsonNull.Value : new BsonString(item.Description),
             ["StartsAt"] = new BsonDateTime(item.StartsAt),
             ["EndsAt"] = item.EndsAt.HasValue ? new BsonDateTime(item.EndsAt.Value) : BsonNull.Value,

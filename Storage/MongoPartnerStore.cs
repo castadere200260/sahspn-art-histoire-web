@@ -1,6 +1,6 @@
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Microsoft.Extensions.Options;
 using Sahspn.ArtHistoire.Configuration;
 using Sahspn.ArtHistoire.Models;
 
@@ -81,10 +81,15 @@ public sealed class MongoPartnerStore : IPartnerStore
         DateTime Date(string name) { var value = Get(name); return value is not null && value.IsBsonDateTime ? value.ToUniversalTime() : DateTime.UtcNow; }
         return new Partner
         {
-            Id = Number("Id"), Name = Text("Name") ?? string.Empty, Description = Text("Description"),
-            WebsiteUrl = Text("WebsiteUrl"), LogoUrl = Text("LogoUrl"),
+            Id = Number("Id"),
+            Name = Text("Name") ?? string.Empty,
+            Description = Text("Description"),
+            WebsiteUrl = Text("WebsiteUrl"),
+            LogoUrl = Text("LogoUrl"),
             IsPublished = Get("IsPublished")?.IsBoolean == true && Get("IsPublished")!.AsBoolean,
-            DisplayOrder = Number("DisplayOrder"), CreatedAtUtc = Date("CreatedAtUtc"), UpdatedAtUtc = Date("UpdatedAtUtc")
+            DisplayOrder = Number("DisplayOrder"),
+            CreatedAtUtc = Date("CreatedAtUtc"),
+            UpdatedAtUtc = Date("UpdatedAtUtc")
         };
     }
 }

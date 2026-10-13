@@ -7,7 +7,7 @@
 <section class="section admin-section">
     <div class="container">
         <h1>@(isNew ? "Nouveau bulletin" : "Modifier le bulletin")</h1>
-        <p class="admin-intro">Renseignez les informations du bulletin, puis ajoutez sa couverture et en option son document PDF.</p>
+        <p class="admin-intro">Renseignez les informations du bulletin, puis ajoutez sa couverture et, en option, son document PDF ou image.</p>
 
         <form action="/administration/bulletins/enregistrer" method="post" enctype="multipart/form-data" class="admin-login-form bulletin-form">
             @Html.AntiForgeryToken()
@@ -66,22 +66,30 @@
                         <span class="upload-icon" aria-hidden="true">PDF</span>
                         <div>
                             <h2 id="pdf-upload-title">Document du bulletin</h2>
-                            <p>PDF uniquement · 25 Mo maximum</p>
+                            <p>PDF, JPG, JPEG, PNG ou WebP · 25 Mo maximum</p>
                         </div>
                     </div>
                     @if (!string.IsNullOrWhiteSpace(Model.DocumentUrl))
                     {
+                        var documentExtension = System.IO.Path.GetExtension(Model.DocumentUrl).ToLowerInvariant();
                         <div class="current-file current-pdf">
-                            <span class="pdf-file-icon" aria-hidden="true">PDF</span>
-                            <div><strong>Document actuel</strong><a href="@Model.DocumentUrl" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+                            @if (documentExtension is ".jpg" or ".jpeg" or ".png" or ".webp")
+                            {
+                                <img src="@Model.DocumentUrl" alt="Document actuel du bulletin" class="cover-preview" />
+                            }
+                            else
+                            {
+                                <span class="pdf-file-icon" aria-hidden="true">PDF</span>
+                            }
+                            <div><strong>Document actuel</strong><a href="@Model.DocumentUrl" target="_blank" rel="noopener">Afficher le document</a></div>
                         </div>
                     }
                     <label class="file-picker" for="documentFile">
-                        <input id="documentFile" name="documentFile" type="file" accept="application/pdf,.pdf" />
-                        <span class="file-picker-button">Choisir un PDF</span>
+                        <input id="documentFile" name="documentFile" type="file" accept="application/pdf,image/jpeg,image/png,image/webp,.pdf,.jpg,.jpeg,.png,.webp" />
+                        <span class="file-picker-button">Choisir un fichier</span>
                         <span class="file-picker-name" data-file-name="documentFile">Aucun fichier sélectionné</span>
                     </label>
-                    <p class="upload-help">Si vous ne sélectionnez pas de nouveau PDF, le document actuel est conservé.</p>
+                    <p class="upload-help">Si vous ne sélectionnez pas de nouveau fichier, le document actuel est conservé.</p>
                 </section>
             </div>
 

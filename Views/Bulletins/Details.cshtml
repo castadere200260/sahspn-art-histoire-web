@@ -12,21 +12,165 @@
 </section>
 <section class="page-content">
     <div class="container bulletin-detail">
+
         <div class="detail-cover">
             @if (!string.IsNullOrWhiteSpace(Model.CoverImage))
             {
-                <img src="@Model.CoverImage" alt="Couverture du bulletin @Model.Number" />
+                <img class="bulletin-cover"
+                     src="@Url.Content(Model.CoverImage)"
+                     alt="Couverture du bulletin @Model.Number"
+                     onclick="openCoverZoom(this.src)" />
+
+                <button type="button"
+                        class="cover-zoom-button button button-light"
+                        onclick="openCoverZoom('@Url.Content(Model.CoverImage)')">
+                     Agrandir la couverture
+                </button>
             }
             else
             {
-
-                <div class="cover-placeholder large-placeholder"><span>ART & HISTOIRE</span><strong>PÉRIGORD<br>NOIR</strong><small>Bulletin n° @Model.Number</small></div>
+                <div class="cover-placeholder large-placeholder">
+                    <span>ART &amp; HISTOIRE</span>
+                    <strong>PÉRIGORD<br />NOIR</strong>
+                    <small>Bulletin n° @Model.Number</small>
+                </div>
             }
         </div>
+
+        
         <div class="detail-copy">
-            <div class="content-kicker">SOMMAIRE & EXTRAITS</div>
+            <div class="content-kicker">SOMMAIRE &amp; EXTRAITS</div>
+
             <div class="legacy-content">@Model.Content</div>
-            <p class="muted-note">Pour obtenir un exemplaire ou vérifier la disponibilité d’un numéro, contactez l’association.</p><a class="button button-dark" asp-controller="Pages" asp-action="Contact">Demander des informations <span>↗</span></a>
+
+            @if (!string.IsNullOrWhiteSpace(Model.DocumentUrl))
+            {
+                var documentExtension =
+                System.IO.Path.GetExtension(Model.DocumentUrl).ToLowerInvariant();
+
+                <section class="bulletin-document"
+                         aria-labelledby="bulletin-document-title"
+                         style="margin: 1.5rem 0;">
+
+                    @if (documentExtension is ".jpg" or ".jpeg" or ".png" or ".webp")
+                    {
+                        <img class="bulletin-document-image"
+                             src="@Url.Content(Model.DocumentUrl)"
+                             alt="Document du bulletin @Model.Number"
+                             style="display:block;max-width:100%;height:auto;max-height:720px;object-fit:contain;cursor:zoom-in;"
+                             onclick="openCoverZoom(this.src)" />
+
+                        <button type="button"
+                                class="cover-zoom-button button button-light"
+                                onclick="openCoverZoom('@Url.Content(Model.DocumentUrl)')">
+                             Agrandir le document
+                        </button>
+                    }
+                    else if (documentExtension == ".pdf")
+                    {
+                        <p>
+                            <a class="button button-light"
+                               href="@Url.Content(Model.DocumentUrl)"
+                               target="_blank"
+                               rel="noopener">
+                                Ouvrir le document PDF <span>↗</span>
+                            </a>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <a class="button button-light"
+                               href="@Url.Content(Model.DocumentUrl)"
+                               target="_blank"
+                               rel="noopener">
+                                Ouvrir le document <span>↗</span>
+                            </a>
+                        </p>
+                    }
+                </section>
+            }
+
+            <p class="contact-form">
+                Pour obtenir un exemplaire ou vérifier la disponibilité d’un numéro,
+                contactez l’association.
+            </p>
+
+            <a class="button button-dark"
+               asp-controller="Pages"
+               asp-action="Contact">
+                Demander des informations <span>↗</span>
+            </a>
         </div>
+        
+        @* <div class="detail-copy">
+            <div class="content-kicker">SOMMAIRE & EXTRAITS</div>
+
+            <div class="legacy-content">@Model.Content</div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.DocumentUrl))
+            {
+                var documentExtension = System.IO.Path.GetExtension(Model.DocumentUrl).ToLowerInvariant();
+                <section class="bulletin-document" aria-labelledby="bulletin-document-title" style="margin: 1.5rem 0;">
+
+                    @if (documentExtension is ".jpg" or ".jpeg" or ".png" or ".webp")
+                    {
+                        <a href="@Model.DocumentUrl" target="_blank" rel="noopener" aria-label="Afficher le document du bulletin @Model.Number en taille réelle">
+                            <img src="@Model.DocumentUrl" alt="Document du bulletin @Model.Number" style="display:block;max-width:100%;height:auto;max-height:720px;object-fit:contain;" />
+                        </a>
+                        <p>
+                            <a href="@Model.DocumentUrl" target="_blank" rel="noopener">Afficher l’image en taille réelle</a>
+                        </p>
+                    }
+                    else if (documentExtension == ".pdf")
+                    {
+                        <p>
+                            <a class="button button-dark" href="@Model.DocumentUrl" target="_blank" rel="noopener">Ouvrir le document PDF <span>↗</span></a>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <a class="button button-dark" href="@Model.DocumentUrl" target="_blank" rel="noopener">Ouvrir le document <span>↗</span></a>
+                        </p>
+                    }
+                </section>
+            }
+            <p class="contact-form">Pour obtenir un exemplaire ou vérifier la disponibilité d’un numéro, contactez l’association.</p>
+            <a class="button button-dark" asp-controller="Pages" asp-action="Contact">Demander des informations <span>↗</span></a>
+        </div>
+ *@
+
+        <div id="coverZoomModal"
+             class="cover-zoom-modal"
+             onclick="closeCoverZoom()"
+             style="display:none;">
+            <button type="button"
+                    class="cover-zoom-close"
+                    aria-label="Fermer"
+                    onclick="event.stopPropagation(); closeCoverZoom();">
+                &times;
+            </button>
+            <img id="coverZoomImage" alt="Couverture agrandie" />
+        </div>
+
+        <script>
+            function openCoverZoom(imageUrl) {
+                document.getElementById('coverZoomImage').src = imageUrl;
+                document.getElementById('coverZoomModal').style.display = 'flex';
+            }
+
+            function closeCoverZoom() {
+                document.getElementById('coverZoomModal').style.display = 'none';
+            }
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    closeCoverZoom();
+                }
+            });
+        </script>
+
+
     </div>
 </section>

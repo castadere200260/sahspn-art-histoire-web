@@ -1,6 +1,6 @@
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Microsoft.Extensions.Options;
 using Sahspn.ArtHistoire.Configuration;
 using Sahspn.ArtHistoire.Models;
 namespace Sahspn.ArtHistoire.Storage;

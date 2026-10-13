@@ -4,7 +4,7 @@ using Sahspn.ArtHistoire.Models;
 
 namespace Sahspn.ArtHistoire.Storage;
 
-public sealed class MySqlSiteContentStore(SahspDbContext db, ContentSeeder seeder) : ISiteContentStore
+public sealed class MySqlSiteContentStore(SahspDbContext db) : ISiteContentStore
 {
     public async Task<IReadOnlyList<Bulletin>> GetLatestBulletinsAsync(int count, CancellationToken cancellationToken = default) =>
         await db.Bulletins.AsNoTracking().OrderByDescending(x => x.Number).Take(count).ToListAsync(cancellationToken);
@@ -93,7 +93,6 @@ public sealed class MySqlSiteContentStore(SahspDbContext db, ContentSeeder seede
         db.AdminUsers.Add(user);
         await db.SaveChangesAsync(cancellationToken);
     }
-
 
     public async Task<IReadOnlyList<GalleryImage>> GetGalleryImagesAsync(bool publishedOnly = false, CancellationToken cancellationToken = default)
     {
@@ -243,6 +242,5 @@ public sealed class MySqlSiteContentStore(SahspDbContext db, ContentSeeder seede
                 PRIMARY KEY (`Id`), KEY `IX_ShopItems_IsPublished_Type` (`IsPublished`, `Type`)
             ) CHARACTER SET=utf8mb4;
             """, cancellationToken);
-        await seeder.SeedAsync();
     }
 }

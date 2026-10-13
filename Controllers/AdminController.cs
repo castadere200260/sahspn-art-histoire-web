@@ -33,8 +33,19 @@ public sealed class AdminController(IAdminManagementStore data, ISiteContentStor
 
         try
         {
-            if (coverFile is { Length: > 0 }) item.CoverImage = await SaveUploadAsync(coverFile, "covers", new[] { ".jpg", ".jpeg", ".png", ".webp" }, 8 * 1024 * 1024, ct);
-            if (documentFile is { Length: > 0 }) item.DocumentUrl = await SaveUploadAsync(documentFile, "bulletins", new[] { ".pdf" }, 25 * 1024 * 1024, ct);
+            // Preserve existing file URLs when editing without selecting replacement files.
+            var current = !isNew ? await content.GetBulletinAsync(originalNumber, ct) : null;
+            if (!isNew && current is null)
+                throw new InvalidOperationException($"Bulletin {originalNumber} introuvable.");
+
+            item.CoverImage = coverFile is { Length: > 0 }
+                ? await SaveUploadAsync(coverFile, "covers", new[] { ".jpg", ".jpeg", ".png", ".webp" }, 8 * 1024 * 1024, ct)
+                : current?.CoverImage ?? item.CoverImage;
+
+            item.DocumentUrl = documentFile is { Length: > 0 }
+                ? await SaveUploadAsync(documentFile, "bulletins", new[] { ".pdf", ".jpg", ".jpeg", ".png", ".webp" }, 25 * 1024 * 1024, ct)
+                : current?.DocumentUrl ?? item.DocumentUrl;
+
             await data.SaveBulletinAsync(item, originalNumber, ct);
             TempData["AdminSuccess"] = isNew ? "Bulletin créé avec succès." : "Bulletin modifié avec succès.";
             return RedirectToAction(nameof(Bulletins));
@@ -421,7 +432,15 @@ public sealed class AdminController(IAdminManagementStore data, ISiteContentStor
         if (file.Length > maxBytes)
             throw new InvalidDataException($"Le fichier dépasse la taille maximale autorisée ({maxBytes / (1024 * 1024)} Mo).");
 
-        var folder = Path.Combine(environment.WebRootPath ?? Path.Combine(environment.ContentRootPath, "wwwroot"), "uploads", subfolder);
+        var configuredRoot = Environment.GetEnvironmentVariable("Uploads__RootPath");
+        var uploadsRoot = string.IsNullOrWhiteSpace(configuredRoot)
+            ? Path.Combine(environment.WebRootPath ?? Path.Combine(environment.ContentRootPath, "wwwroot"), "uploads")
+            : Path.GetFullPath(configuredRoot);
+        var folder = Path.GetFullPath(Path.Combine(uploadsRoot, subfolder));
+        var rootWithSeparator = uploadsRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            + Path.DirectorySeparatorChar;
+        if (!folder.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidDataException("Chemin de stockage invalide.");
         Directory.CreateDirectory(folder);
         var fileName = $"{Guid.NewGuid():N}{extension}";
         var fullPath = Path.Combine(folder, fileName);

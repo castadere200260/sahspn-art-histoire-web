@@ -1,6 +1,6 @@
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Microsoft.Extensions.Options;
 using Sahspn.ArtHistoire.Configuration;
 using Sahspn.ArtHistoire.Models;
 
@@ -78,12 +78,16 @@ public sealed class MongoShopCatalogStore : IShopCatalogStore
         var price = Get("Price");
         return new ShopItem
         {
-            Id = Int("Id"), Title = Text("Title") ?? string.Empty,
+            Id = Int("Id"),
+            Title = Text("Title") ?? string.Empty,
             Type = Enum.IsDefined(typeof(ShopItemType), Int("Type")) ? (ShopItemType)Int("Type") : ShopItemType.Document,
-            Description = Text("Description"), Price = price is not null && price.IsNumeric ? (decimal)price.ToDouble() : 0m,
-            ImageUrl = Text("ImageUrl"), DocumentUrl = Text("DocumentUrl"),
+            Description = Text("Description"),
+            Price = price is not null && price.IsNumeric ? (decimal)price.ToDouble() : 0m,
+            ImageUrl = Text("ImageUrl"),
+            DocumentUrl = Text("DocumentUrl"),
             IsPublished = Get("IsPublished")?.IsBoolean == true && Get("IsPublished")!.AsBoolean,
-            CreatedAtUtc = Date("CreatedAtUtc"), UpdatedAtUtc = Date("UpdatedAtUtc")
+            CreatedAtUtc = Date("CreatedAtUtc"),
+            UpdatedAtUtc = Date("UpdatedAtUtc")
         };
     }
 }

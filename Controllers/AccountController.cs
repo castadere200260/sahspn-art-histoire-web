@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Sahspn.ArtHistoire.Models;
 using Sahspn.ArtHistoire.Storage;
+using System.Security.Claims;
 
 namespace Sahspn.ArtHistoire.Controllers;
 

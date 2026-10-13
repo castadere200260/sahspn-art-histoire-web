@@ -1,13 +1,12 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Sahspn.ArtHistoire.Configuration;
 using Sahspn.ArtHistoire.Data;
-using Sahspn.ArtHistoire.Storage;
 using Sahspn.ArtHistoire.Models;
+using Sahspn.ArtHistoire.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,7 +56,6 @@ switch (provider.ToLowerInvariant())
             var settings = serviceProvider.GetRequiredService<IOptions<MySqlOptions>>().Value;
             options.UseMySql(settings.ConnectionString, new MySqlServerVersion(new Version(8, 4, 0)));
         });
-        builder.Services.AddScoped<ContentSeeder>();
         builder.Services.AddScoped<ISiteContentStore, MySqlSiteContentStore>();
         builder.Services.AddScoped<IAdminManagementStore, MySqlAdminManagementStore>();
         builder.Services.AddScoped<IShopCatalogStore, MySqlShopCatalogStore>();
@@ -104,6 +102,19 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+var configuredUploadsRoot = Environment.GetEnvironmentVariable("Uploads__RootPath");
+if (!string.IsNullOrWhiteSpace(configuredUploadsRoot))
+{
+    var uploadsRoot = Path.GetFullPath(configuredUploadsRoot);
+    Directory.CreateDirectory(uploadsRoot);
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploadsRoot),
+        RequestPath = "/uploads"
+    });
+}
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
