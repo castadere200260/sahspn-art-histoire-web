@@ -17,7 +17,11 @@
             <div>
                 <h1>Membres de l’association.</h1>
             </div>
-            <div><a class="button button-dark" asp-action="BoardMembers">Membres du bureau</a> <a class="button button-dark" asp-action="NewMember">+ Ajouter un membre</a></div>
+            <div>
+                <a class="button button-light" asp-action="Index">Retour tableau de bord</a>
+                <a class="button button-dark" asp-action="BoardMembers">Membres du bureau</a>
+                <a class="button button-dark" asp-action="NewMember">Ajouter un membre</a>
+            </div>
         </div>
         <p class="admin-list-count">@Model.Count membre(s)</p>
         <div class="admin-table-wrap">

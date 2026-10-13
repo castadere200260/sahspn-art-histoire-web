@@ -4,7 +4,6 @@
 }
 <section class="section">
     <div class="container">
-        <p class="eyebrow">Administration</p>
         @if (TempData["AdminSuccess"] is string success)
         {
             <p class="alert alert-success" role="status">@success</p>
@@ -15,7 +14,7 @@
         }
         <h1>Gestion des utilisateurs</h1>
         <p>
-            <a class="button button-dark" asp-action="NewUser">+ Nouvel utilisateur</a>
+            <a class="button button-dark" asp-action="NewUser">Nouvel utilisateur</a>
             <a class="button button-light" asp-action="Index">Retour au tableau de bord</a>
         </p>
         <p>Les mots de passe ne sont jamais affichés. Laissez le champ mot de passe vide lors d’une modification pour le conserver.</p>

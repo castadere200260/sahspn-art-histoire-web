@@ -629,7 +629,7 @@ h1, h2, h3, p {
 
 .page-hero {
     background: var(--cream);
-    padding: 83px 0 75px;
+    padding: 50px 0 75px;
     position: relative;
     overflow: hidden
 }
@@ -1053,7 +1053,7 @@ h1, h2, h3, p {
     }
 
     .intro-section {
-        padding: 68px 0
+        padding: 40px 0
     }
 
     .intro-grid {
@@ -1149,7 +1149,7 @@ h1, h2, h3, p {
     }
 
     .page-hero {
-        padding: 60px 0 55px
+        padding: 30px 0 55px
     }
 
         .page-hero h1 {

@@ -4,7 +4,7 @@
 }
 <section class="section">
     <div class="container">
-        <p class="eyebrow">Administration · Partenaires</p><h1>Gestion des partenaires</h1>
+        <h1>Gestion des partenaires</h1>
         @if (TempData["AdminSuccess"] is string success)
         {
             <p class="admin-success" role="status">@success</p>
@@ -14,8 +14,9 @@
             <p class="validation-summary" role="alert">@error</p>
         }
         <p>
-            <a class="button button-dark" asp-action="NewPartner">+ Ajouter un partenaire</a>
-            <a asp-controller="PublicDirectory" asp-action="Partners" target="_blank" rel="noopener">Voir la page publique ↗</a>
+            <a class="button button-dark" asp-action="NewPartner">Ajouter Partenaire</a>
+            <a class="button button-light" asp-controller="PublicDirectory" asp-action="Partners" target="_blank" rel="noopener">Voir la page publique ↗</a>
+            <a class="button button-light" asp-action="Index">Retour tableau de bord</a>
         </p>
         <div class="admin-table-wrap">
             <table class="admin-table">

@@ -4,15 +4,18 @@
 }
 <section class="section">
     <div class="container">
-        <p class="eyebrow">Administration</p><h1>Gestion des bulletins</h1>@if (TempData["AdminSuccess"] is string success){
-        <p class="admin-success" role="status">@success</p>
-                }
+        <h1>Gestion des bulletins</h1>
+        @if (TempData["AdminSuccess"] is string success)
+        {
+            <p class="admin-success" role="status">@success</p>
+        }
         @if (TempData["AdminError"] is string error)
         {
             <p class="validation-summary" role="alert">@error</p>
         }
         <p>
-            <a class="button" asp-action="NewBulletin">+ Nouveau bulletin</a> <a asp-action="Index">Retour au tableau de bord</a>
+            <a class="button button-dark" asp-action="NewBulletin">Nouveau bulletin</a>
+            <a class="button button-light" asp-action="Index">Retour au tableau de bord</a>
         </p>
         <div class="admin-table-wrap">
             <table class="admin-table">
@@ -20,7 +23,15 @@
                 <tbody>
                     @foreach (var x in Model)
                     {
-                        <tr><td>@x.Number</td><td>@x.Title</td><td>@(x.PublishedAt?.ToString("dd/MM/yyyy") ?? "—")</td><td><a asp-action="EditBulletin" asp-route-number="@x.Number">Modifier</a><form asp-action="DeleteBulletin" asp-route-number="@x.Number" method="post" class="inline-form" onsubmit="return confirm('Supprimer ce bulletin ?')">@Html.AntiForgeryToken()<button type="submit" class="text-danger">Supprimer</button></form></td></tr>
+                        <tr>
+                            <td>@x.Number</td>
+                            <td>@x.Title</td>
+                            <td>@(x.PublishedAt?.ToString("dd/MM/yyyy") ?? "—")</td>
+                            <td>
+                                <a asp-action="EditBulletin" asp-route-number="@x.Number">Modifier</a>
+                                <form asp-action="DeleteBulletin" asp-route-number="@x.Number" method="post" class="inline-form" onsubmit="return confirm('Supprimer ce bulletin ?')">@Html.AntiForgeryToken()<button type="submit" class="text-danger">Supprimer</button></form>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

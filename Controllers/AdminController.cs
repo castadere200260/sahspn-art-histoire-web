@@ -338,6 +338,11 @@ public sealed class AdminController(IAdminManagementStore data, ISiteContentStor
     [HttpPost("galerie/enregistrer"), ValidateAntiForgeryToken]
     public async Task<IActionResult> SaveGalleryImage(GalleryImage item, IFormFile? imageFile, CancellationToken ct)
     {
+        // Id and ImageUrl are assigned by the server/upload process, not supplied
+        // as editable form values. Remove implicit MVC required errors for them.
+        ModelState.Remove(nameof(GalleryImage.Id));
+        ModelState.Remove(nameof(GalleryImage.ImageUrl));
+
         var isNew = string.IsNullOrWhiteSpace(item.Id) || item.Id.Length > 36;
         if (isNew) item.Id = Guid.NewGuid().ToString("N");
         ViewBag.IsNewGalleryImage = isNew;

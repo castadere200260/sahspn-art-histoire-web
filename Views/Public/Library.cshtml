@@ -4,7 +4,9 @@
 }
 <section class="page-hero">
     <div class="container">
-        <h1>La <em>bibliothèque.</em></h1><p>Explorez les ouvrages, les références et les ressources documentaires.</p>
+        @* <h1>La <em>bibliothèque.</em></h1> *@
+        <h1>Bibliothèque</h1>
+        <p>Explorez les ouvrages, les références et les ressources documentaires.</p>
         <form class="search-form" method="get" action="/bibliotheque">
             <input name="q" value="@ViewBag.Query" placeholder="Rechercher un titre, un auteur, un sujet…" aria-label="Rechercher dans la bibliothèque" /><button type="submit">Rechercher <span>→</span></button>
         </form>

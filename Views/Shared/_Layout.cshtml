@@ -42,17 +42,6 @@
                 <a asp-controller="PublicDirectory" asp-action="Shop">Boutique</a>
                 <a asp-controller="PublicDirectory" asp-action="Partners">Partenaires</a>
 
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <a asp-controller="Admin" asp-action="Index">Administration</a>
-                    <form asp-controller="Account" asp-action="Logout" method="post" class="nav-logout">
-                        @Html.AntiForgeryToken()<button type="submit">Déconnexion</button>
-                    </form>
-                }
-                else
-                {
-                    <a asp-controller="Account" asp-action="Login">Connexion</a>
-                }
             </nav>
         </div>
     </header>
@@ -63,17 +52,24 @@
         <nav class="admin-subnav" aria-label="Menu d’administration">
             <div class="container admin-subnav-inner">
                 @* <span class="admin-subnav-label">Administration</span> *@
-                <a asp-controller="Admin" asp-action="Index">Tableau de bord</a>
+                <a asp-controller="Admin" asp-action="Index">Tableau bord</a>
                 <a asp-controller="Admin" asp-action="Bulletins">Bulletins</a>
                 <a asp-controller="Admin" asp-action="Library">Bibliothèque</a>
                 <a asp-controller="Admin" asp-action="DocumentsStudies">Documents</a>
                 <a asp-controller="Admin" asp-action="Gallery">Galerie</a>
-                <a asp-controller="Admin" asp-action="Members">Membres</a>
-                <a asp-controller="Admin" asp-action="BoardMembers">Bureau</a>
                 <a asp-controller="Admin" asp-action="Appointments">Actualités</a>
                 <a asp-controller="Admin" asp-action="Shop">Boutique</a>
                 <a asp-controller="Admin" asp-action="Partners">Partenaires</a>
+                <a asp-controller="Admin" asp-action="Members">Membres</a>
+                <a asp-controller="Admin" asp-action="BoardMembers">Bureau</a>
+                <a asp-controller="Admin" asp-action="SitePages">Contenu</a>
+
                 <a asp-controller="Admin" asp-action="Users">Utilisateurs</a>
+              
+                <form asp-controller="Account" asp-action="Logout" method="post"
+                      class="nav-logout">
+                    @Html.AntiForgeryToken()<button type="submit">Déconnexion</button>
+                </form>
             </div>
         </nav>
     }
@@ -96,6 +92,11 @@
                 <a asp-controller="PublicDirectory" asp-action="BoardMembers">Bureau</a>
                 <a asp-controller="PublicDirectory" asp-action="Members">Membres</a>
                 <a asp-controller="PublicDirectory" asp-action="Partners">Partenaires</a>
+                @if (User.Identity?.IsAuthenticated != true)
+                {
+                    <a asp-controller="Account" asp-action="Login">Connexion</a>
+                }
+
             </div>
             <div>
                 <p>Vous vous intéressez à l’histoire ou au patrimoine local</p>

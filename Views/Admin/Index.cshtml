@@ -4,7 +4,7 @@
 }
 <section class="section">
     <div class="container">
-        <p class="eyebrow">Espace privé · SAHSPN</p>
+        @* <p class="eyebrow">Espace privé · SAHSPN</p> *@
         <h2>Tableau de bord pour gérez les données de l’association.</h2>
         @* <p>Bienvenue, @User.Identity?.Name. Gérez les données de l’association.</p> *@
         <div class="admin-cards">
@@ -34,17 +34,10 @@
                 <span class="button">Gérer la galerie →</span>
             </a>
 
-            <a class="admin-card admin-card-link" asp-action="Members">
-                <span class="admin-card-label">Membres</span>
-                @* <strong>@Model.TotalMembers</strong> *@
-                <p>Gérer les Membres et les membres du bureau.</p>
-                <span class="button">Gérer Membres →</span>
-            </a>
-
             <a class="admin-card admin-card-link" asp-action="Appointments">
                 <span class="admin-card-label">Actualités</span>
                 @* <strong>@Model.TotalAppointments</strong> *@
-                <p>Gérer Réunions, conférences et événements.</p>
+                <p>Gérer les réunions et événements.</p>
                 <span class="button">Gérer Actualités →</span>
             </a>
 
@@ -60,9 +53,16 @@
                 <span class="button">Gérer Partenaire →</span>
             </a>
 
+            <a class="admin-card admin-card-link" asp-action="Members">
+                <span class="admin-card-label">Membres/Bureau</span>
+                @* <strong>@Model.TotalMembers</strong> *@
+                <p>Gérer les Membres et les membres du bureau.</p>
+                <span class="button">Gérer Membres →</span>
+            </a>
+
             <a class="admin-card admin-card-link" asp-action="SitePages">
-                <span class="admin-card-label">Pages du site</span>
-                <p>Créer, modifier et supprimer les pages du site public.</p>
+                <span class="admin-card-label">Contenu Pages</span>
+                <p>Gérez le contenu page du site public.</p>
                 <span class="button">Gérer les pages →</span>
             </a>
 

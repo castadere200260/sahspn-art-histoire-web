@@ -4,7 +4,7 @@
 }
 <section class="section">
     <div class="container">
-        <p class="eyebrow">Administration · Catalogue</p><h1>Gestion de la boutique</h1>
+        <h1>Gestion de la boutique</h1>
         <p>Gérez les bulletins et documents affichés au public. Cette boutique est un catalogue : aucune commande ni aucun paiement n’est proposé.</p>
         @if (TempData["AdminSuccess"] is string success)
         {
@@ -15,7 +15,9 @@
             <p class="validation-summary" role="alert">@error</p>
         }
         <p>
-            <a class="button" asp-action="NewShopItem">+ Ajouter un article</a> <a asp-controller="PublicDirectory" asp-action="Shop" target="_blank" rel="noopener">Voir la boutique publique ↗</a>
+            <a class="button button-dark" asp-action="NewShopItem">Ajouter un article</a>
+            <a class="button button-light" asp-controller="PublicDirectory" asp-action="Shop" target="_blank" rel="noopener">Voir la boutique publique ↗</a>
+            <a class="button button-light" asp-action="Index">Retour tableau de bord</a>
         </p>
         <div class="admin-table-wrap">
             <table class="admin-table">

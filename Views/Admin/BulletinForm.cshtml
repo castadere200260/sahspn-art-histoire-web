@@ -6,9 +6,8 @@
 }
 <section class="section admin-section">
     <div class="container">
-        <p class="eyebrow">Administration · Bulletins</p>
         <h1>@(isNew ? "Nouveau bulletin" : "Modifier le bulletin")</h1>
-        <p class="admin-intro">Renseignez les informations du bulletin, puis ajoutez sa couverture et son document PDF. Les fichiers sont enregistrés sur le serveur et leurs chemins sont conservés dans la base sélectionnée.</p>
+        <p class="admin-intro">Renseignez les informations du bulletin, puis ajoutez sa couverture et en option son document PDF.</p>
 
         <form action="/administration/bulletins/enregistrer" method="post" enctype="multipart/form-data" class="admin-login-form bulletin-form">
             @Html.AntiForgeryToken()

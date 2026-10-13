@@ -4,7 +4,7 @@
 }
 <section class="section">
     <div class="container">
-        <p class="eyebrow">Administration · Membres</p><h1>@(isNew ? "Nouveau membre" : "Modifier le membre")</h1>
+        <h1>@(isNew ? "Nouveau membre" : "Modifier le membre")</h1>
         <form action="/administration/membres/enregistrer" method="post" class="admin-login-form">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="All" class="validation-summary" role="alert" aria-live="assertive"></div>
@@ -30,7 +30,8 @@
                 <input asp-for="ElectionDate" type="date" />
                 <span asp-validation-for="ElectionDate"></span>
             </fieldset>
-            <button class="button" type="submit">Enregistrer</button><a asp-action="Members">Annuler</a>
+            <button class="button" type="submit">Enregistrer</button>
+            <a class="button button-dark" asp-action="Members">Annuler</a>
         </form>
     </div>
 </section>

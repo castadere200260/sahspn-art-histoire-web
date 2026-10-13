@@ -4,11 +4,10 @@
 }
 <section class="section">
     <div class="container">
-        <p class="eyebrow">Administration · Contenu du site</p>
         <h1>Gestion des pages du site</h1>
         <p>
-            <a class="button" asp-action="NewSitePage">+ Nouvelle page</a>
-            <a asp-action="Index">Retour au tableau de bord</a>
+            <a class="button button-dark" asp-action="NewSitePage">Nouvelle page</a>
+            <a class="button button-light" asp-action="Index">Retour tableau de bord</a>
         </p>
         @if (TempData["AdminSuccess"] is string success)
         {

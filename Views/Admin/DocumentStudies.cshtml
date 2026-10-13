@@ -4,7 +4,7 @@
 }
 <section class="section">
     <div class="container">
-        <p class="eyebrow">Administration</p><h1>Documents / Études</h1>
+        <h1>Documents / Études</h1>
         @if (TempData["AdminSuccess"] is string success)
         {
             <p class="admin-success" role="status">@success</p>
@@ -13,7 +13,9 @@
         {
             <p class="validation-summary" role="alert">@error</p>
         }
-        <p><a class="button" asp-action="NewDocumentStudy">+ Ajouter un document ou une étude</a> <a asp-action="Index">Retour au tableau de bord</a></p>
+        <p>
+            <a class="button button-dark" asp-action="NewDocumentStudy">Ajouter Document/Etude</a> 
+            <a class="button button-light" asp-action="Index">Retour tableau de bord</a></p>
         @if (Model.Count == 0)
         {
             <div class="admin-empty-state">Aucun document ou étude enregistré.</div>

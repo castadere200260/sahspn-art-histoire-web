@@ -1,3 +1,23 @@
 @model Sahspn.ArtHistoire.Models.AdminUserInput
-@{ViewData["Title"]="Utilisateur";var isNew=ViewBag.IsNew is bool value ? value : false;var id=ViewBag.UserId ?? 0;}
-<section class="section"><div class="container"><p class="eyebrow">Administration · Utilisateurs</p><h1>@(isNew?"Nouvel utilisateur":"Modifier l’utilisateur")</h1><form action="/administration/utilisateurs/enregistrer" method="post" class="admin-login-form">@Html.AntiForgeryToken()<div asp-validation-summary="All" class="validation-summary" role="alert" aria-live="assertive"></div><input type="hidden" name="id" value="@id"/><label asp-for="Username">Identifiant</label><input asp-for="Username" autocomplete="username"/><span asp-validation-for="Username"></span><label asp-for="Password">@(isNew?"Mot de passe":"Nouveau mot de passe (facultatif)")</label><input asp-for="Password" type="password" autocomplete="new-password"/><span asp-validation-for="Password"></span><label><input asp-for="IsActive" type="checkbox"/> Compte actif</label><button class="button" type="submit">Enregistrer</button><a asp-action="Users">Annuler</a></form></div></section>
+@{
+    ViewData["Title"] = "Utilisateur"; var isNew = ViewBag.IsNew is bool value ? value : false; var id = ViewBag.UserId ?? 0;
+}
+<section class="section">
+    <div class="container">
+        <h1>@(isNew ? "Nouvel utilisateur" : "Modifier l’utilisateur")</h1>
+        <form action="/administration/utilisateurs/enregistrer" method="post" class="admin-login-form">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="validation-summary" role="alert" aria-live="assertive"></div>
+            <input type="hidden" name="id" value="@id" />
+            <label asp-for="Username">Identifiant</label>
+            <input asp-for="Username" autocomplete="username" />
+            <span asp-validation-for="Username"></span>
+            <label asp-for="Password">@(isNew ? "Mot de passe" : "Nouveau mot de passe (facultatif)")</label>
+            <input asp-for="Password" type="password" autocomplete="new-password" />
+            <span asp-validation-for="Password"></span>
+            <label><input asp-for="IsActive" type="checkbox" /> Compte actif</label>
+            <button class="button " type="submit">Enregistrer</button>
+            <a class="button button-dark" asp-action="Users">Annuler</a>
+        </form>
+    </div>
+</section>

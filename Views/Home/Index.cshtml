@@ -1,7 +1,93 @@
 @model IReadOnlyList<Bulletin>
-@{ ViewData["Title"] = "Accueil"; }
-<section class="hero"><div class="hero-image"></div><div class="container hero-content"><div class="eyebrow"><span></span> Une mémoire vivante depuis 1973</div><h1>Le patrimoine<br>raconte <em>qui nous sommes.</em></h1><p>Explorer l’histoire de Sarlat et du Périgord Noir, préserver ses traces et partager les recherches qui éclairent notre territoire.</p><div class="hero-actions"><a class="button button-light" asp-controller="Pages" asp-action="Details" asp-route-slug="association">Découvrir l’association <span>↗</span></a><a class="text-link light-link" asp-controller="Bulletins" asp-action="Index">Parcourir les bulletins <span>→</span></a></div><div class="hero-note"><span class="note-line"></span><span>Histoire locale, art et archéologie</span></div></div><div class="hero-caption">SARLAT · PÉRIGORD NOIR</div></section>
-<section class="intro-section"><div class="container intro-grid"><div><div class="eyebrow dark-eyebrow"><span></span> Notre engagement</div><h2>Comprendre le passé.<br><em>Transmettre l’essentiel.</em></h2></div><div class="intro-copy"><p>Fondée en 1973, la Société d’Art et d’Histoire de Sarlat et du Périgord Noir rassemble celles et ceux qui souhaitent mieux connaître l’histoire, l’archéologie, l’art et les paysages culturels du territoire.</p><a class="under-link" asp-controller="Pages" asp-action="Details" asp-route-slug="association">En savoir plus sur la société <span>↗</span></a></div></div></section>
-<section class="pillars"><div class="container pillar-grid"><article class="pillar-card"><span class="pillar-number">01</span><div class="pillar-icon">⌂</div><h3>Préserver</h3><p>Participer à la recherche et à la sauvegarde des vestiges et témoignages du passé.</p></article><article class="pillar-card"><span class="pillar-number">02</span><div class="pillar-icon">✳</div><h3>Étudier</h3><p>Faire connaître les travaux consacrés à l’histoire, à l’archéologie et à l’art local.</p></article><article class="pillar-card"><span class="pillar-number">03</span><div class="pillar-icon">▤</div><h3>Partager</h3><p>Publier et diffuser les recherches dans notre bulletin trimestriel.</p></article></div></section>
-<section class="latest-section"><div class="container"><div class="section-heading"><div><div class="eyebrow dark-eyebrow"><span></span> À lire en ce moment</div><h2>Les derniers <em>bulletins</em></h2></div><a class="under-link" asp-controller="Bulletins" asp-action="Index">Tous les bulletins <span>↗</span></a></div><div class="bulletin-grid">@foreach(var item in Model){<a class="bulletin-card" asp-controller="Bulletins" asp-action="Details" asp-route-number="@item.Number"><div class="cover-wrap">@if(!string.IsNullOrWhiteSpace(item.CoverImage)){<img src="@item.CoverImage" alt="Couverture du bulletin @item.Number" loading="lazy"/>}else{<div class="cover-placeholder"><span>ART & HISTOIRE</span><strong>PÉRIGORD<br>NOIR</strong><small>Bulletin n° @item.Number</small></div>}<span class="cover-arrow">↗</span></div><div class="bulletin-meta">PUBLICATION <span>N° @item.Number</span></div><h3>@item.Title</h3><span class="card-link">Consulter le bulletin <span>→</span></span></a>}</div></div></section>
-<section class="join-band"><div class="container join-content"><div><div class="eyebrow"><span></span> Rejoignez-nous</div><h2>La connaissance du passé<br>se construit <em>ensemble.</em></h2></div><a class="button button-light" asp-controller="Pages" asp-action="Contact">Échanger avec l’association <span>↗</span></a></div></section>
+@{
+    ViewData["Title"] = "Accueil";
+}
+<section class="hero">
+    <div class="hero-image"></div>
+    <div class="container hero-content">
+        <div class="eyebrow"><span></span> Une mémoire vivante depuis 1973</div>
+        <h1>Le patrimoine<br>raconte <em>qui nous sommes.</em></h1>
+        <p>Explorer l’histoire de Sarlat et du Périgord Noir, préserver ses traces et partager les recherches qui éclairent notre territoire.</p>
+        <div class="hero-actions">
+            <a class="button button-light" asp-controller="Pages" asp-action="Details" asp-route-slug="association">Découvrir l’association <span>↗</span></a>
+            <a class="text-link light-link" asp-controller="Bulletins" asp-action="Index">Parcourir les bulletins <span>→</span></a>
+        </div>
+        <div class="hero-note">
+            <span class="note-line"></span>
+            <span>Histoire locale, art et archéologie</span>
+        </div>
+    </div>
+    <div class="hero-caption">SARLAT · PÉRIGORD NOIR</div>
+</section>
+
+<section class="intro-section">
+    <div class="container intro-grid">
+        <div>
+            <div class="eyebrow dark-eyebrow"><span></span> Notre engagement</div>
+            <h2>Comprendre le passé.<br><em>Transmettre l’essentiel.</em></h2>
+        </div>
+        <div class="intro-copy">
+            <p>Fondée en 1973, la Société d’Art et d’Histoire de Sarlat et du Périgord Noir rassemble celles et ceux qui souhaitent mieux connaître l’histoire, l’archéologie, l’art et les paysages culturels du territoire.</p>
+            <a class="under-link" asp-controller="Pages" asp-action="Details" asp-route-slug="association">En savoir plus sur la société <span>↗</span></a>
+        </div>
+    </div>
+</section>
+<section class="pillars">
+    <div class="container pillar-grid">
+        <article class="pillar-card">
+            <span class="pillar-number">01</span>
+            <div class="pillar-icon">⌂</div><h3>Préserver</h3><p>Participer à la recherche et à la sauvegarde des vestiges et témoignages du passé.</p>
+        </article>
+        <article class="pillar-card">
+            <span class="pillar-number">02</span>
+            <div class="pillar-icon">✳</div><h3>Étudier</h3><p>Faire connaître les travaux consacrés à l’histoire, à l’archéologie et à l’art local.</p>
+        </article>
+        <article class="pillar-card">
+            <span class="pillar-number">03</span>
+            <div class="pillar-icon">▤</div><h3>Partager</h3><p>Publier et diffuser les recherches dans notre bulletin trimestriel.</p>
+        </article>
+    </div>
+</section>
+<section class="latest-section">
+    <div class="container">
+        <div class="section-heading">
+            <div>
+                <div class="eyebrow dark-eyebrow"><span></span> À lire en ce moment</div>
+                <h2>Les derniers <em>bulletins</em></h2>
+            </div><a class="under-link" asp-controller="Bulletins" asp-action="Index">Tous les bulletins <span>↗</span></a>
+        </div>
+        <div class="bulletin-grid">
+            @foreach (var item in Model)
+            {
+                <a class="bulletin-card" asp-controller="Bulletins" asp-action="Details" asp-route-number="@item.Number">
+                    <div class="cover-wrap">
+                        @if (!string.IsNullOrWhiteSpace(item.CoverImage))
+                        {
+                            <img src="@item.CoverImage" alt="Couverture du bulletin @item.Number" loading="lazy" />
+                        }
+                        else
+                        {
+
+                            <div class="cover-placeholder"><span>ART & HISTOIRE</span><strong>PÉRIGORD<br>NOIR</strong><small>Bulletin n° @item.Number</small></div>
+                        }
+                        <span class="cover-arrow">↗</span>
+                    </div>
+                    <div class="bulletin-meta">PUBLICATION <span>N° @item.Number</span></div>
+                    <h3>@item.Title</h3>
+                    <span class="card-link">Consulter le bulletin <span>→</span></span>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+<section class="join-band">
+    <div class="container join-content">
+        <div>
+            <div class="eyebrow"><span></span> Rejoignez-nous</div>
+            <h2>La connaissance du passé<br>se construit <em>ensemble.</em></h2>
+        </div>
+        <a class="button button-light" asp-controller="Pages" asp-action="Contact">
+            Échanger avec l’association <span>↗</span>
+        </a>
+    </div>
+</section>
