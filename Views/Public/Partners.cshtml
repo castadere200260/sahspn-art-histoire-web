@@ -15,13 +15,11 @@
                 <article class="bulletin-card partner-card">
                     @if (!string.IsNullOrWhiteSpace(partner.LogoUrl))
                     {
-                        <div class="partner-logo-wrap"><img src="@partner.LogoUrl" alt="Logo de @partner.Name" loading="lazy" /></div>
+                        <div class="partner-logo-wrap">
+                            <img src="@partner.LogoUrl" alt="Logo de @partner.Name" loading="lazy" />
+                        </div>
                     }
-                    else
-                    {
 
-                        <div class="cover-placeholder partner-placeholder"><span>SAHSPN</span><strong>@partner.Name</strong><small>Partenaire</small></div>
-                    }
                     <h3>@partner.Name</h3>
                     @if (!string.IsNullOrWhiteSpace(partner.Description))
                     {
@@ -29,7 +27,9 @@
                     }
                     @if (!string.IsNullOrWhiteSpace(partner.WebsiteUrl))
                     {
-                        <a class="card-link" href="@partner.WebsiteUrl" target="_blank" rel="noopener noreferrer">Visiter le site <span>↗</span></a>
+                        <a class="button" href="@partner.WebsiteUrl" target="_blank" rel="noopener noreferrer">
+                            Visiter le site
+                        </a>
                     }
                 </article>
             }

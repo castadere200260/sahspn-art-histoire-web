@@ -4,11 +4,13 @@
 }
 <section class="section">
     <div class="container">
-        <p class="eyebrow">Publications · Boutique</p>
         <div class="admin-page-heading">
             <div>
                 <h1>Boutique</h1><p>Découvrez les bulletins et documents proposés par la Société d’Art et d’Histoire de Sarlat et du Périgord Noir.</p>
             </div>
+            <a class="button button-dark" asp-controller="Pages" asp-action="Contact">
+                Nous contacter
+            </a>
         </div>
 
         @if (Model.Count == 0)
@@ -45,7 +47,9 @@
                         <a class="card-link" href="@item.DocumentUrl" target="_blank" rel="noopener">Consulter le document <span>↗</span></a>
                     }
                 </article>
+
             }
         </div>
+
     </div>
 </section>

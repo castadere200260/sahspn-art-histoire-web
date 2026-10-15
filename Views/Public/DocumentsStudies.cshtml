@@ -2,7 +2,8 @@
 @{
     ViewData["Title"] = "Documents et études";
 }
-<section class="page-hero">
+<section class="page-hero" style="padding:14px">
+    >
     <div class="container">
         <h1>Documents <em>& Études.</em></h1>
         <p>Parcourez les documents historiques et les études.</p>
@@ -20,18 +21,22 @@
             @foreach (var item in Model)
             {
                 <a class="bulletin-card" asp-controller="PublicDirectory" asp-action="DocumentStudyDetails" asp-route-id="@item.Id">
-                    <div class="cover-wrap">
-                        @if (!string.IsNullOrWhiteSpace(item.CoverImage))
-                        {
-                            <img src="@item.CoverImage" alt="Couverture : @item.Title" loading="lazy" />
-                        }
-                        else
-                        {
 
-                            <div class="cover-placeholder"><span>SAHSPN</span><strong>@(item.Type == Sahspn.ArtHistoire.Models.DocumentStudyType.Document ? "DOCUMENT" : "ÉTUDE")</strong><small>Archives & recherches</small></div>
-                        }
-                        <span class="cover-arrow">↗</span>
-                    </div><div class="bulletin-meta">@(item.Type == Sahspn.ArtHistoire.Models.DocumentStudyType.Document ? "DOCUMENT" : "ÉTUDE") <span>@(item.PublishedAt?.ToString("yyyy") ?? "")</span></div><h3>@item.Title</h3>@if(!string.IsNullOrWhiteSpace(item.Summary)){
+
+
+                    @if (!string.IsNullOrWhiteSpace(item.CoverImage))
+                    {
+                        <div class="cover-wrap">
+
+
+                            <img src="@item.CoverImage" alt="Couverture : @item.Title" loading="lazy" />
+
+                        </div>
+
+                    }
+           
+
+                    <div class="bulletin-meta">@(item.Type == Sahspn.ArtHistoire.Models.DocumentStudyType.Document ? "DOCUMENT" : "ÉTUDE") <span>@(item.PublishedAt?.ToString("yyyy") ?? "")</span></div><h3>@item.Title</h3>@if(!string.IsNullOrWhiteSpace(item.Summary)){
                     <p>@item.Summary</p>
                 }
                 <span class="card-link">Consulter <span>→</span></span>

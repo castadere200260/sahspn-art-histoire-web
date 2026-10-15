@@ -19,5 +19,6 @@
   <ItemGroup><Content Update="seed-content.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\app\" />
+    <Folder Include="wwwroot\uploads\galerie\" />
   </ItemGroup>
 </Project>

@@ -25,7 +25,9 @@
         {
             <div class="admin-empty-state">Aucune image. Cliquez sur « Ajouter une image » pour commencer.</div>
         }
+
         <div class="gallery-grid gallery-admin-grid">
+
             @foreach (var item in Model)
             {
                 <article class="gallery-card">
@@ -47,5 +49,6 @@
                 </article>
             }
         </div>
+        <br />
     </div>
 </section>
